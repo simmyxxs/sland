@@ -58,7 +58,7 @@
   .legend-dot.l-gather { background:rgba(106,154,91,0.2); border:1px solid rgba(106,154,91,0.3); }
   .legend-dot.l-sprout { background:rgba(106,154,91,0.35); border:1px solid var(--accent); animation:lpulse 2s infinite; }
   .legend-dot.l-grow { background:rgba(106,154,91,0.5); border:1px solid var(--accent); }
-  .legend-dot.l-ripe { background:rgba(212,175,55,0.4); border:1px solid rgba(180,140,60,0.6); }
+  .legend-dot.l-ripe { background:rgba(180,80,60,0.35); border:1px solid rgba(180,80,60,0.6); }
   @keyframes lpulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 4px rgba(106,154,91,0.5)} }
 
   /* ── Bubble field ── */
@@ -111,15 +111,15 @@
 
   /* ── Stage: 成熟 ── */
   .bubble.stage-ripe {
-    background:rgba(212,175,55,0.12); border:2px solid rgba(180,140,60,0.5);
-    box-shadow:0 2px 16px rgba(212,175,55,0.15);
+    background:rgba(180,80,60,0.1); border:2px solid rgba(180,80,60,0.45);
+    box-shadow:0 2px 16px rgba(180,80,60,0.12);
   }
-  .bubble.stage-ripe .label { font-size:0.85rem; color:#7a6520; font-weight:500; }
+  .bubble.stage-ripe .label { font-size:0.85rem; color:#8a3a2a; font-weight:500; }
   .bubble.stage-ripe::after {
-    content:'✨'; position:absolute; top:-8px; right:-4px; font-size:0.75rem;
+    content:'🍎'; position:absolute; top:-8px; right:-4px; font-size:0.75rem;
   }
-  .bubble.stage-ripe .cal-tag {
-    font-size:0.48rem; color:#8a7040; background:rgba(212,175,55,0.15);
+  .bubble.stage-ripe .ripe-tag {
+    font-size:0.5rem; color:#8a3a2a; background:rgba(180,80,60,0.1);
     padding:1px 6px; border-radius:8px; margin-top:3px; pointer-events:none;
   }
 
@@ -149,7 +149,7 @@
   .dp-stage-badge.gather { background:#f0f4ed; color:var(--text-muted); }
   .dp-stage-badge.sprout { background:var(--accent-soft); color:var(--accent); }
   .dp-stage-badge.grow { background:var(--accent-soft); color:#4a7a42; }
-  .dp-stage-badge.ripe { background:#f5eedd; color:#7a6520; }
+  .dp-stage-badge.ripe { background:#f5e8e5; color:#8a3a2a; }
 
   .dp-desc { color:var(--text-light); font-size:0.82rem; margin-bottom:1.2rem; line-height:1.8; }
 
@@ -170,8 +170,8 @@
   .dp-progress { font-size:0.82rem; color:var(--text-light); line-height:1.8; }
 
   /* ripe-specific */
-  .dp-event { background:#faf7ef; border-radius:10px; padding:1rem; margin-bottom:1rem; }
-  .dp-event h4 { font-size:0.72rem; color:#8a7040; letter-spacing:0.08em; margin-bottom:0.5rem; font-weight:400; }
+  .dp-event { background:#faf2f0; border-radius:10px; padding:1rem; margin-bottom:1rem; }
+  .dp-event h4 { font-size:0.72rem; color:#8a3a2a; letter-spacing:0.08em; margin-bottom:0.5rem; font-weight:400; }
   .dp-event .info { font-size:0.88rem; color:var(--text); line-height:1.8; }
   .dp-cal-link {
     display:inline-block; font-size:0.78rem; color:var(--accent);
@@ -312,7 +312,7 @@ const LINKS = [
 ];
 
 const STAGE_LABEL = { gather:'聚拢中', sprout:'萌发中', grow:'生长中', ripe:'已成熟' };
-const STAGE_COLOR = { gather:'#4a7a42', sprout:'#4a7a42', grow:'#4a7a42', ripe:'#7a6520' };
+const STAGE_COLOR = { gather:'#4a7a42', sprout:'#4a7a42', grow:'#4a7a42', ripe:'#8a3a2a' };
 
 function layout() {
   const field = document.getElementById('field');
@@ -349,7 +349,7 @@ function layout() {
       inner += `<span class="host-tag">${d.host.emoji} ${d.host.name}</span>`;
     }
     if(d.stage==='ripe') {
-      inner += `<span class="cal-tag">已进入日历</span>`;
+      inner += `<span class="ripe-tag">已成熟</span>`;
     }
 
     el.innerHTML = inner;
