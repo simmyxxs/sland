@@ -8,108 +8,80 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&family=Noto+Sans+SC:wght@300;400;500&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
   :root {
-    --card: #ffffff;
-    --text: #333;
-    --text-light: #8a9080;
-    --text-muted: #b8bfb0;
-    --accent: #6a9a5b;
-    --accent-soft: #e2eddc;
-    --border: #e4e8e0;
-    --off-bg: #f4f6f2;
-    --off-text: #b0b8a8;
-    --off-border: #e0e4dc;
+    --card:#fff; --text:#333; --text-light:#8a9080; --text-muted:#b8bfb0;
+    --accent:#6a9a5b; --accent-soft:#e2eddc; --border:#e4e8e0;
   }
-
-  /* ── Fixed background layer (works on all devices including iOS) ── */
-  html, body {
-    margin:0; padding:0; height:100%;
-  }
+  html,body { margin:0; padding:0; height:100%; }
   body {
     font-family:'Noto Sans SC',sans-serif;
     color:var(--text); line-height:1.7; font-weight:300;
-    min-height:100vh;
-    overflow-x:hidden;
+    min-height:100vh; overflow-x:hidden;
   }
-
-  /* 
-   * 用 fixed 定位的伪元素做背景，解决 iOS 不支持 background-attachment:fixed 的问题。
-   * 背景图永远钉死在视口上，不随滚动移动。
-   */
   body::before {
-    content:'';
-    position:fixed;
-    top:0; left:0;
-    width:100vw; height:100vh;
-    z-index:-1;
+    content:''; position:fixed; top:0; left:0;
+    width:100vw; height:100vh; z-index:-1;
     background:url('bg-desktop.jpg') center/cover no-repeat;
     background-color:#2a5a28;
   }
+  @media(max-width:700px){ body::before { background-image:url('bg-mobile.jpg'); } }
 
-  /* 手机端用单独的背景图 */
-  @media (max-width:700px) {
-    body::before {
-      background-image:url('bg-mobile.jpg');
-    }
-  }
-    /* 保证在任何屏幕比例下都铺满，不留白 */
-    will-change:transform;
-  }
-
-  /* 内容滚动容器，padding-bottom 留底部空间 */
-  .page-scroll {
-    position:relative;
-    z-index:1;
-    padding-bottom:2rem;
-  }
-
-  /* ── Header: text floating over forest ── */
-  .header { text-align:center; padding:5rem 2rem 3rem; }
+  /* ── Header ── */
+  .header { text-align:center; padding:3rem 2rem 1rem; position:relative; z-index:2; }
   .header h1 {
     font-family:'Noto Serif SC',serif; font-weight:600;
     font-size:4.5rem; letter-spacing:0.15em;
-    color:#fff; margin-bottom:0.4rem;
-    text-shadow:0 4px 30px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.3);
-    line-height:1.1;
+    color:#fff; text-shadow:0 4px 30px rgba(0,0,0,0.4);
+    margin-bottom:0.3rem;
   }
   .header .sub {
     color:rgba(255,255,255,0.9); font-size:1rem;
-    letter-spacing:0.18em; text-shadow:0 2px 12px rgba(0,0,0,0.3);
-    font-weight:300;
+    letter-spacing:0.18em; text-shadow:0 2px 12px rgba(0,0,0,0.3); font-weight:300;
   }
 
-  /* ── Floating cards ── */
+  /* ── Tab navigation ── */
+  .tab-nav {
+    display:flex; justify-content:center; gap:0;
+    max-width:780px; margin:1.5rem auto 0;
+    position:relative; z-index:2;
+  }
+  .tab-btn {
+    font-family:'Noto Sans SC',sans-serif; font-size:0.82rem; font-weight:300;
+    letter-spacing:0.08em;
+    padding:0.6rem 1.5rem;
+    border:none; background:rgba(255,255,255,0.5); color:var(--text-light);
+    cursor:pointer; transition:all 0.3s;
+  }
+  .tab-btn:first-child { border-radius:10px 0 0 10px; }
+  .tab-btn:last-child { border-radius:0 10px 10px 0; }
+  .tab-btn.active {
+    background:rgba(255,255,255,0.94); color:var(--text);
+    font-weight:400; box-shadow:0 2px 12px rgba(0,0,0,0.08);
+  }
+  .tab-btn:hover:not(.active) { background:rgba(255,255,255,0.7); }
+
+  /* ── Views ── */
+  .view { display:none; position:relative; z-index:1; padding-bottom:2rem; }
+  .view.active { display:block; animation:viewIn 0.35s ease; }
+  @keyframes viewIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
   .card {
-    max-width:750px; margin:0 auto 1.2rem;
-    background:rgba(255,255,255,0.96);
-    border-radius:12px;
-    box-shadow:0 2px 20px rgba(0,0,0,0.1);
-    padding:2rem 1.5rem;
+    max-width:780px; margin:1rem auto;
+    background:rgba(255,255,255,0.94); border-radius:14px;
+    box-shadow:0 2px 20px rgba(0,0,0,0.08); padding:2rem 1.8rem;
   }
-  .card-seed {
-    max-width:750px; margin:0 auto 1.2rem;
-    background:rgba(255,255,255,0.93);
-    border-radius:12px;
-    box-shadow:0 2px 16px rgba(0,0,0,0.08);
-    padding:1.5rem;
-  }
-  .card-footer {
-    max-width:750px; margin:0 auto;
-    background:rgba(255,255,255,0.85);
-    border-radius:12px;
-    padding:1rem;
-    text-align:center;
-  }
-  .card-footer .footer-inner { color:var(--text-muted); font-size:0.7rem; letter-spacing:0.05em; }
+  .section-head { text-align:center; margin-bottom:1.5rem; }
+  .section-head .div { width:32px; height:1px; background:var(--border); margin:0 auto 1rem; }
+  .section-head h2 { font-family:'Noto Serif SC',serif; font-weight:400; font-size:1.15rem; color:var(--text); margin-bottom:0.3rem; }
+  .section-head p { color:var(--text-light); font-size:0.8rem; }
 
-  /* ── Building ── */
+  /* ══════════════════════════════════════
+     VIEW 1: 空间 (building + calendar)
+     ══════════════════════════════════════ */
   .hint { text-align:center; color:var(--text-muted); font-size:0.72rem; margin-bottom:1rem; letter-spacing:0.05em; }
   .floor { margin-bottom:6px; overflow:hidden; }
-
   .floor-4f { display:grid; grid-template-columns:80px 220px 80px 150px 150px; grid-template-rows:55px 55px; gap:2px; max-width:690px; margin:0 auto; }
   .floor-std { display:grid; grid-template-columns:80px 220px 80px 150px 150px; grid-template-rows:65px; gap:2px; max-width:690px; margin:0 auto; }
-  .floor-2f  { display:grid; grid-template-columns:80px 220px 80px 150px 75px 75px; grid-template-rows:65px; gap:2px; max-width:690px; margin:0 auto; }
-
-  /* ── Space block ── */
+  .floor-2f { display:grid; grid-template-columns:80px 220px 80px 150px 75px 75px; grid-template-rows:65px; gap:2px; max-width:690px; margin:0 auto; }
   .sb {
     background:var(--card); border:1px solid var(--border); border-radius:4px;
     padding:0.5rem 0.6rem; cursor:pointer;
@@ -117,57 +89,29 @@
     position:relative; overflow:hidden;
     transition:border-color .25s, box-shadow .25s, transform .25s;
   }
-  .sb::before {
-    content:''; position:absolute; top:0;left:0;right:0; height:2.5px;
-    background:var(--accent); opacity:0; transition:opacity .25s;
-  }
-  .sb:hover:not(.off) {
-    border-color:var(--accent); transform:translateY(-1px);
-    box-shadow:0 4px 16px rgba(106,154,91,0.1);
-  }
+  .sb::before { content:''; position:absolute; top:0;left:0;right:0; height:2.5px; background:var(--accent); opacity:0; transition:opacity .25s; }
+  .sb:hover:not(.off) { border-color:var(--accent); transform:translateY(-1px); box-shadow:0 4px 16px rgba(106,154,91,0.1); }
   .sb:hover:not(.off)::before { opacity:1; }
   .sb.active { border-color:var(--accent); box-shadow:0 4px 16px rgba(106,154,91,0.12); }
   .sb.active::before { opacity:1; }
-
-  .sb.off { background:var(--off-bg); border-color:var(--off-border); cursor:default; }
+  .sb.off { background:#f4f6f2; border-color:#e0e4dc; cursor:default; }
   .sb.off .sn { color:var(--text-muted); }
-  .sb.off .sr { color:var(--off-text); }
-
-  .cb {
-    background:transparent!important;
-    border:1px dashed var(--border)!important;
-    border-radius:4px;
-    cursor:default!important;
-    display:flex; align-items:center; justify-content:center;
-  }
+  .sb.off .sr { color:#b0b8a8; }
+  .cb { background:transparent!important; border:1px dashed var(--border)!important; border-radius:4px; cursor:default!important; display:flex; align-items:center; justify-content:center; }
   .cb .fn { font-family:'Noto Serif SC',serif; font-size:0.7rem; color:var(--text-muted); letter-spacing:0.1em; }
-
   .sn { font-size:0.58rem; color:var(--text-muted); margin-bottom:0.15rem; letter-spacing:0.08em; font-weight:300; }
   .sr { font-size:0.82rem; font-weight:400; color:var(--text); line-height:1.3; }
   .st { margin-top:0.2rem; font-size:0.62rem; color:var(--accent); font-weight:300; }
   .sa { font-size:0.52rem; color:var(--text-muted); margin-top:0.1rem; }
-
-  .p1a { grid-column:1; grid-row:1; }
-  .p1b { grid-column:1; grid-row:2; }
-  .p2  { grid-column:2; grid-row:1/3; }
-  .pc  { grid-column:3; grid-row:1/3; }
-  .p3  { grid-column:4; grid-row:1/3; }
-  .p4  { grid-column:5; grid-row:1/3; }
+  .p1a { grid-column:1; grid-row:1; } .p1b { grid-column:1; grid-row:2; }
+  .p2 { grid-column:2; grid-row:1/3; } .pc { grid-column:3; grid-row:1/3; }
+  .p3 { grid-column:4; grid-row:1/3; } .p4 { grid-column:5; grid-row:1/3; }
   .p1a,.p1b { padding:0.3rem 0.4rem; }
-  .p1a .sn,.p1b .sn { font-size:0.48rem; }
-  .p1a .sr,.p1b .sr { font-size:0.68rem; }
-  .p1a .st,.p1b .st { font-size:0.52rem; }
+  .p1a .sn,.p1b .sn { font-size:0.48rem; } .p1a .sr,.p1b .sr { font-size:0.68rem; } .p1a .st,.p1b .st { font-size:0.52rem; }
 
-  /* ── Detail card (separate from main) ── */
-  .detail-card {
-    max-width:750px; margin:1.2rem auto;
-    background:rgba(255,255,255,0.96);
-    border-radius:12px;
-    box-shadow:0 2px 20px rgba(0,0,0,0.1);
-    padding:2rem 1.5rem;
-  }
-  /* ── Detail panel ── */
-  .dp { max-width:700px; margin:0 auto; padding:0; }
+  /* Detail + calendar */
+  .detail-card { max-width:780px; margin:1rem auto; background:rgba(255,255,255,0.96); border-radius:14px; box-shadow:0 2px 20px rgba(0,0,0,0.1); padding:2rem 1.5rem; }
+  .dp { max-width:700px; margin:0 auto; }
   .dp .back { color:var(--text-muted); font-size:0.78rem; cursor:pointer; margin-bottom:1rem; border:none; background:none; font-family:inherit; }
   .dp .back:hover { color:var(--accent); }
   .dt { font-family:'Noto Serif SC',serif; font-size:1.3rem; font-weight:400; color:var(--text); margin-bottom:0.3rem; }
@@ -176,16 +120,14 @@
   .ds h3 { font-size:0.75rem; color:var(--text-muted); letter-spacing:0.12em; margin-bottom:0.5rem; font-weight:400; }
   .pl { display:flex; gap:0.6rem; flex-wrap:wrap; }
   .ps { background:var(--accent-soft); color:var(--accent); padding:0.25rem 0.7rem; border-radius:20px; font-size:0.78rem; }
-
-  /* ── Calendar ── */
   .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.8rem; }
-  .cal-header .month-label { font-family:'Noto Serif SC',serif; font-size:0.95rem; font-weight:400; color:var(--text); }
+  .cal-header .month-label { font-family:'Noto Serif SC',serif; font-size:0.95rem; font-weight:400; }
   .cal-header button { border:none; background:none; cursor:pointer; color:var(--text-muted); font-size:1rem; padding:0 0.5rem; }
   .cal-header button:hover { color:var(--accent); }
   .cal { width:100%; border-collapse:collapse; }
   .cal th { font-size:0.65rem; color:var(--text-muted); font-weight:300; padding:0.3rem; text-align:center; width:14.28%; }
-  .cal td { vertical-align:top; padding:3px; height:68px; border:1px solid var(--off-border); background:var(--card); }
-  .cal td.other { background:var(--off-bg); border-color:transparent; }
+  .cal td { vertical-align:top; padding:3px; height:68px; border:1px solid #e0e4dc; background:var(--card); }
+  .cal td.other { background:#f4f6f2; border-color:transparent; }
   .cal .day-num { font-size:0.68rem; color:var(--text-light); margin-bottom:2px; }
   .cal .slots { display:flex; flex-direction:column; gap:1px; }
   .cal .slot-item { font-size:0.5rem; padding:2px 4px; border-radius:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -195,212 +137,400 @@
   .cal td.today { border-color:var(--accent); background:#f8fbf5; }
   .cal td.today .day-num { color:var(--accent); font-weight:500; }
 
-  /* ── Seed ── */
-  .seed { text-align:center; }
-  .seed .div { width:32px; height:1px; background:var(--border); margin:0 auto 1.2rem; }
-  .seed h2 { font-family:'Noto Serif SC',serif; font-weight:400; font-size:1.1rem; color:var(--text); margin-bottom:0.4rem; }
-  .seed p { color:var(--text-light); font-size:0.82rem; margin-bottom:1.2rem; }
-  .sf { max-width:380px; margin:0 auto; text-align:left; }
-  .sf textarea {
-    width:100%; border:1px solid var(--border); border-radius:6px;
-    padding:0.8rem 1rem; font-family:'Noto Sans SC',sans-serif;
-    font-size:0.88rem; font-weight:300; resize:vertical; min-height:80px;
-    background:var(--card); color:var(--text); outline:none;
+  /* ══════════════════════════════════════
+     VIEW 2: 种子田
+     ══════════════════════════════════════ */
+  .legend { display:flex; justify-content:center; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem; font-size:0.68rem; color:var(--text-muted); }
+  .legend-item { display:flex; align-items:center; gap:0.35rem; }
+  .legend-dot { width:10px; height:10px; border-radius:50%; }
+  .legend-dot.l-gather { background:rgba(106,154,91,0.2); border:1px solid rgba(106,154,91,0.3); }
+  .legend-dot.l-sprout { background:rgba(106,154,91,0.35); border:1px solid var(--accent); animation:lpulse 2s infinite; }
+  .legend-dot.l-grow { background:rgba(106,154,91,0.5); border:1px solid var(--accent); }
+  .legend-dot.l-ripe { background:rgba(180,80,60,0.35); border:1px solid rgba(180,80,60,0.6); }
+  @keyframes lpulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 4px rgba(106,154,91,0.5)} }
+
+  .bubble-field { position:relative; width:100%; height:420px; margin:0 auto; overflow:hidden; }
+  .connections { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+  .connections line { stroke:var(--border); stroke-width:1; opacity:0.4; }
+
+  .bubble {
+    position:absolute; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    cursor:pointer; text-align:center; user-select:none;
+    transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s;
   }
-  .sf textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(106,154,91,0.1); }
-  .sf textarea::placeholder { color:var(--text-muted); }
-  .sf input {
-    width:100%; border:1px solid var(--border); border-radius:6px;
-    padding:0.55rem 1rem; font-family:'Noto Sans SC',sans-serif;
-    font-size:0.82rem; font-weight:300; background:var(--card);
-    color:var(--text); margin-top:0.5rem; outline:none;
+  .bubble:hover { transform:scale(1.1); z-index:10; }
+  .bubble .label { font-family:'Noto Serif SC',serif; line-height:1.2; pointer-events:none; }
+
+  .bubble.stage-gather { background:rgba(226,237,220,0.5); border:1px solid rgba(106,154,91,0.15); }
+  .bubble.stage-gather .label { font-size:0.7rem; color:var(--text-light); }
+  .bubble.stage-sprout { background:rgba(226,237,220,0.8); border:1.5px solid var(--accent); animation:sproutPulse 3s ease-in-out infinite; }
+  .bubble.stage-sprout .label { font-size:0.8rem; color:var(--accent); font-weight:400; }
+  .bubble.stage-sprout::after { content:'🌱'; position:absolute; top:-8px; right:-4px; font-size:0.75rem; }
+  @keyframes sproutPulse { 0%,100%{box-shadow:0 0 0 0 rgba(106,154,91,0.1)} 50%{box-shadow:0 0 20px 5px rgba(106,154,91,0.18)} }
+  .bubble.stage-grow { background:rgba(106,154,91,0.15); border:2px solid var(--accent); box-shadow:0 2px 12px rgba(106,154,91,0.12); }
+  .bubble.stage-grow .label { font-size:0.85rem; color:#4a7a42; font-weight:500; }
+  .bubble.stage-grow .host-tag { font-size:0.5rem; color:var(--accent); background:rgba(106,154,91,0.1); padding:1px 6px; border-radius:8px; margin-top:3px; pointer-events:none; }
+  .bubble.stage-ripe { background:rgba(180,80,60,0.1); border:2px solid rgba(180,80,60,0.45); box-shadow:0 2px 16px rgba(180,80,60,0.12); }
+  .bubble.stage-ripe .label { font-size:0.85rem; color:#8a3a2a; font-weight:500; }
+  .bubble.stage-ripe::after { content:'🍎'; position:absolute; top:-8px; right:-4px; font-size:0.75rem; }
+  .bubble.stage-ripe .ripe-tag { font-size:0.5rem; color:#8a3a2a; background:rgba(180,80,60,0.1); padding:1px 6px; border-radius:8px; margin-top:3px; pointer-events:none; }
+
+  .bubble.size-s { width:64px; height:64px; }
+  .bubble.size-m { width:92px; height:92px; }
+  .bubble.size-l { width:120px; height:120px; }
+
+  /* Seed detail panel */
+  .seed-panel { max-width:780px; margin:1rem auto; background:rgba(255,255,255,0.96); border-radius:14px; box-shadow:0 2px 20px rgba(0,0,0,0.1); padding:1.5rem 1.8rem; display:none; }
+  .seed-panel.open { display:block; animation:viewIn 0.3s ease; }
+  .sp-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.8rem; }
+  .sp-title { font-family:'Noto Serif SC',serif; font-size:1.15rem; }
+  .sp-close { border:none; background:none; color:var(--text-muted); font-size:1.3rem; cursor:pointer; }
+  .sp-close:hover { color:var(--text); }
+  .sp-badge { display:inline-block; font-size:0.68rem; padding:0.2rem 0.7rem; border-radius:12px; margin-bottom:1rem; }
+  .sp-badge.gather { background:#f0f4ed; color:var(--text-muted); }
+  .sp-badge.sprout { background:var(--accent-soft); color:var(--accent); }
+  .sp-badge.grow { background:var(--accent-soft); color:#4a7a42; }
+  .sp-badge.ripe { background:#f5e8e5; color:#8a3a2a; }
+  .sp-desc { color:var(--text-light); font-size:0.82rem; margin-bottom:1.2rem; line-height:1.8; }
+  .sp-seeds h4 { font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:0.5rem; font-weight:400; }
+  .seed-item { background:#f8faf6; border-radius:8px; padding:0.7rem 1rem; margin-bottom:0.4rem; border-left:2px solid var(--accent-soft); }
+  .seed-item .idea { font-size:0.84rem; color:var(--text); line-height:1.5; }
+  .seed-item .meta { font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem; }
+  .sp-host { display:flex; align-items:center; gap:0.8rem; background:#f4f8f2; border-radius:10px; padding:1rem; margin-bottom:1rem; }
+  .sp-host-avatar { width:40px; height:40px; border-radius:50%; background:var(--accent-soft); display:flex; align-items:center; justify-content:center; font-size:1rem; }
+  .sp-host-info .name { font-size:0.9rem; font-weight:400; }
+  .sp-host-info .role { font-size:0.68rem; color:var(--accent); }
+  .sp-progress { font-size:0.82rem; color:var(--text-light); line-height:1.8; margin-bottom:1rem; }
+  .sp-event { background:#faf2f0; border-radius:10px; padding:1rem; margin-bottom:1rem; }
+  .sp-event h4 { font-size:0.72rem; color:#8a3a2a; letter-spacing:0.08em; margin-bottom:0.5rem; font-weight:400; }
+  .sp-event .info { font-size:0.88rem; line-height:1.8; }
+
+  /* ══════════════════════════════════════
+     VIEW 3: 投种子 (对话模式)
+     ══════════════════════════════════════ */
+  .chat-card {
+    max-width:500px; margin:1rem auto;
+    background:rgba(255,255,255,0.94); border-radius:14px;
+    box-shadow:0 2px 20px rgba(0,0,0,0.08);
+    padding:1.5rem; min-height:400px;
+    display:flex; flex-direction:column;
   }
-  .sf input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(106,154,91,0.1); }
-  .sf input::placeholder { color:var(--text-muted); }
-  .sf button {
-    margin-top:0.8rem; padding:0.5rem 1.5rem;
-    border:1px solid var(--accent); border-radius:6px;
-    background:transparent; color:var(--accent);
+  .chat-messages { flex:1; overflow-y:auto; margin-bottom:1rem; }
+  .chat-msg {
+    margin-bottom:0.8rem; display:flex; gap:0.6rem;
+    animation:msgIn 0.3s ease;
+  }
+  @keyframes msgIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+  .chat-msg.bot { justify-content:flex-start; }
+  .chat-msg.user { justify-content:flex-end; }
+  .chat-avatar {
+    width:28px; height:28px; border-radius:50%;
+    background:var(--accent-soft); display:flex; align-items:center; justify-content:center;
+    font-size:0.75rem; flex-shrink:0;
+  }
+  .chat-bubble {
+    max-width:75%; padding:0.6rem 1rem; border-radius:12px;
+    font-size:0.84rem; line-height:1.6;
+  }
+  .chat-msg.bot .chat-bubble {
+    background:#f4f6f2; color:var(--text); border-bottom-left-radius:4px;
+  }
+  .chat-msg.user .chat-bubble {
+    background:var(--accent); color:#fff; border-bottom-right-radius:4px;
+  }
+  .chat-input-area { display:flex; gap:0.5rem; }
+  .chat-input {
+    flex:1; border:1px solid var(--border); border-radius:10px;
+    padding:0.6rem 1rem; font-family:'Noto Sans SC',sans-serif;
+    font-size:0.84rem; font-weight:300; outline:none;
+    background:var(--card); color:var(--text);
+  }
+  .chat-input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(106,154,91,0.1); }
+  .chat-input::placeholder { color:var(--text-muted); }
+  .chat-send {
+    border:none; background:var(--accent); color:#fff;
+    border-radius:10px; padding:0.6rem 1rem;
     font-family:'Noto Sans SC',sans-serif; font-size:0.82rem;
-    cursor:pointer; transition:all .2s; letter-spacing:0.05em;
+    cursor:pointer; transition:background 0.2s;
   }
-  .sf button:hover { background:var(--accent); color:#fff; }
-  #seedOk { display:none; color:var(--accent); font-size:0.88rem; padding:1rem 0; }
+  .chat-send:hover { background:#5a8a4b; }
 
+  /* ── Footer ── */
+  .footer { max-width:780px; margin:1rem auto 0; text-align:center; }
+  .footer .fi { color:rgba(255,255,255,0.6); font-size:0.68rem; letter-spacing:0.05em; }
+
+  /* ── Mobile ── */
   @media(max-width:700px) {
-    .card, .card-seed, .card-footer, .detail-card { margin-left:6px; margin-right:6px; border-radius:10px; }
+    .header { padding:2rem 1rem 0.8rem; }
+    .header h1 { font-size:2.8rem; }
+    .tab-btn { font-size:0.72rem; padding:0.5rem 1rem; }
+    .card,.detail-card,.seed-panel,.chat-card { margin-left:6px; margin-right:6px; }
     .card { padding:1rem 0.5rem; }
-    .detail-card { padding:1rem 0.8rem; }
-    .header { padding:2.5rem 1rem 1.5rem; }
-    .header h1 { font-size:2.8rem; letter-spacing:0.12em; }
-    .header .sub { font-size:0.82rem; }
-
-    /* 手机端用百分比 grid，保持5列布局，gap算在内 */
     .floor-4f,.floor-std,.floor-2f { gap:1px; }
     .floor-4f { grid-template-columns:11% 30% 10% 24% 24%; grid-template-rows:40px 40px; max-width:100%; }
     .floor-std { grid-template-columns:11% 30% 10% 24% 24%; grid-template-rows:46px; max-width:100%; }
-    .floor-2f  { grid-template-columns:11% 30% 10% 24% 12% 12%; grid-template-rows:46px; max-width:100%; }
-
+    .floor-2f { grid-template-columns:11% 30% 10% 24% 12% 12%; grid-template-rows:46px; max-width:100%; }
     .sb { padding:0.2rem 0.3rem; border-radius:3px; }
-    .sr { font-size:0.6rem; line-height:1.2; }
-    .sn { font-size:0.42rem; margin-bottom:0.05rem; }
-    .st { font-size:0.48rem; margin-top:0.1rem; }
-    .sa { font-size:0.38rem; }
-    .p1a .sr,.p1b .sr { font-size:0.5rem; }
-    .p1a .sn,.p1b .sn { font-size:0.36rem; }
-    .p1a .st,.p1b .st { font-size:0.4rem; }
+    .sr { font-size:0.6rem; line-height:1.2; } .sn { font-size:0.42rem; }
+    .st { font-size:0.48rem; } .sa { font-size:0.38rem; }
+    .p1a .sr,.p1b .sr { font-size:0.5rem; } .p1a .sn,.p1b .sn { font-size:0.36rem; }
     .cb .fn { font-size:0.55rem; }
-
-    .cal td { height:50px; }
-    .cal .slot-item { font-size:0.42rem; padding:1px 2px; }
-    .cal .day-num { font-size:0.58rem; }
-    .cal th { font-size:0.55rem; }
-
-    .dt { font-size:1.1rem; }
-    .dd { font-size:0.8rem; }
-    .seed h2 { font-size:1rem; }
+    .cal td { height:50px; } .cal .slot-item { font-size:0.42rem; } .cal .day-num { font-size:0.58rem; } .cal th { font-size:0.55rem; }
+    .bubble-field { height:340px; }
+    .bubble.size-s { width:52px; height:52px; } .bubble.size-m { width:76px; height:76px; } .bubble.size-l { width:100px; height:100px; }
+    .bubble .label { font-size:0.6rem !important; }
+    .legend { gap:0.8rem; font-size:0.58rem; }
+    .chat-card { min-height:350px; }
   }
 </style>
 </head>
 <body>
-<div class="page-scroll">
 
 <div class="header">
   <h1>S.land</h1>
   <div class="sub">一个正在生长的空间 · 良渚</div>
 </div>
 
-<!-- 空间主区域 -->
-<div class="card-seed">
-  <div class="seed">
-    <div class="div"></div>
-    <h2>正在发生</h2>
-    <p>点击亮着的空间，看看里面正在发生什么</p>
-  </div>
-
-  <!-- 4F -->
-  <div class="floor"><div class="floor-4f">
-    <div class="sb p1a" data-s="4-1-1" onclick="go('4-1-1')"><div class="sn">4-1（1）</div><div class="sr">小憩</div><div class="st">桌游</div></div>
-    <div class="sb p1b" data-s="4-1-2" onclick="go('4-1-2')"><div class="sn">4-1（2）</div><div class="sr">待建设</div></div>
-    <div class="sb p2" data-s="4-2" onclick="go('4-2')"><div class="sn">4-2</div><div class="sr">共创空间</div><div class="st">女性活动 · 启动孵化</div><div class="sa">85.5+16.48㎡</div></div>
-    <div class="sb pc cb"><div class="fn">4F</div></div>
-    <div class="sb p3" data-s="4-3" onclick="go('4-3')"><div class="sn">4-3</div><div class="sr">西米的精神空间</div><div class="st">静默与生长</div><div class="sa">59.64㎡</div></div>
-    <div class="sb p4" data-s="4-4" onclick="go('4-4')"><div class="sn">4-4</div><div class="sr">科技空间</div><div class="st">手工DIY · 智能硬件</div><div class="sa">59.64㎡</div></div>
-  </div></div>
-
-  <!-- 3F -->
-  <div class="floor"><div class="floor-std">
-    <div class="sb off"><div class="sn">3-1</div></div>
-    <div class="sb off"><div class="sn">3-2</div></div>
-    <div class="sb cb"><div class="fn">3F</div></div>
-    <div class="sb off"><div class="sn">3-3</div><div class="sr">不饱和银饰工作室</div></div>
-    <div class="sb off"><div class="sn">3-4</div></div>
-  </div></div>
-
-  <!-- 2F -->
-  <div class="floor"><div class="floor-2f">
-    <div class="sb off"><div class="sn">2-1</div></div>
-    <div class="sb off"><div class="sn">2-2</div></div>
-    <div class="sb cb"><div class="fn">2F</div></div>
-    <div class="sb off"><div class="sn">2-3</div><div class="sr">暖村办公空间</div></div>
-    <div class="sb off"><div class="sn">2-4（1）</div><div class="sr">村长</div></div>
-    <div class="sb off"><div class="sn">2-4（2）</div></div>
-  </div></div>
-
-  <!-- 1F -->
-  <div class="floor"><div class="floor-std">
-    <div class="sb off"><div class="sn">1-1</div><div class="sr">卫生间</div></div>
-    <div class="sb off"><div class="sn">1-2</div><div class="sr">野人俱乐部</div></div>
-    <div class="sb cb"><div class="fn">1F</div></div>
-    <div class="sb off"><div class="sn">1-3</div></div>
-    <div class="sb off"><div class="sn">1-4</div></div>
-  </div></div>
-
-  <div id="panels"></div>
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchView('space')">空间</button>
+  <button class="tab-btn" onclick="switchView('seeds')">种子田</button>
+  <button class="tab-btn" onclick="switchView('plant')">投一颗种子</button>
 </div>
 
-<div id="detail-card"></div>
-
-<!-- 种子区域 -->
-<div class="card-seed">
-  <div class="seed">
-    <div class="div"></div>
-    <h2>投一颗种子</h2>
-    <p>你想在这里做什么？任何想法都可以，不分大小，不必成熟。</p>
-    <div class="sf" id="seedForm">
-      <textarea placeholder="你的想法…" id="seedIdea"></textarea>
-      <input type="text" placeholder="你是谁（选填）" id="seedWho">
-      <input type="text" placeholder="联系方式（选填）" id="seedContact">
-      <button onclick="seed()">投入种子</button>
+<!-- ═══ VIEW 1: 空间 ═══ -->
+<div class="view active" id="view-space">
+  <div class="card">
+    <div class="section-head">
+      <div class="div"></div>
+      <h2>正在发生</h2>
+      <p>点击亮着的空间，看看里面正在发生什么</p>
     </div>
-    <div id="seedOk">种子已收到 🌱 织女会看到它的。</div>
+
+    <div class="floor"><div class="floor-4f">
+      <div class="sb p1a" data-s="4-1-1" onclick="go('4-1-1')"><div class="sn">4-1（1）</div><div class="sr">小憩</div><div class="st">桌游</div></div>
+      <div class="sb p1b" data-s="4-1-2" onclick="go('4-1-2')"><div class="sn">4-1（2）</div><div class="sr">待建设</div></div>
+      <div class="sb p2" data-s="4-2" onclick="go('4-2')"><div class="sn">4-2</div><div class="sr">共创空间</div><div class="st">女性活动 · 启动孵化</div><div class="sa">85.5+16.48㎡</div></div>
+      <div class="sb pc cb"><div class="fn">4F</div></div>
+      <div class="sb p3" data-s="4-3" onclick="go('4-3')"><div class="sn">4-3</div><div class="sr">西米的精神空间</div><div class="st">静默与生长</div><div class="sa">59.64㎡</div></div>
+      <div class="sb p4" data-s="4-4" onclick="go('4-4')"><div class="sn">4-4</div><div class="sr">科技空间</div><div class="st">手工DIY · 智能硬件</div><div class="sa">59.64㎡</div></div>
+    </div></div>
+    <div class="floor"><div class="floor-std">
+      <div class="sb off"><div class="sn">3-1</div></div>
+      <div class="sb off"><div class="sn">3-2</div></div>
+      <div class="sb cb"><div class="fn">3F</div></div>
+      <div class="sb off"><div class="sn">3-3</div><div class="sr">不饱和银饰工作室</div></div>
+      <div class="sb off"><div class="sn">3-4</div></div>
+    </div></div>
+    <div class="floor"><div class="floor-2f">
+      <div class="sb off"><div class="sn">2-1</div></div>
+      <div class="sb off"><div class="sn">2-2</div></div>
+      <div class="sb cb"><div class="fn">2F</div></div>
+      <div class="sb off"><div class="sn">2-3</div><div class="sr">暖村办公空间</div></div>
+      <div class="sb off"><div class="sn">2-4（1）</div><div class="sr">村长</div></div>
+      <div class="sb off"><div class="sn">2-4（2）</div></div>
+    </div></div>
+    <div class="floor"><div class="floor-std">
+      <div class="sb off"><div class="sn">1-1</div><div class="sr">卫生间</div></div>
+      <div class="sb off"><div class="sn">1-2</div><div class="sr">野人俱乐部</div></div>
+      <div class="sb cb"><div class="fn">1F</div></div>
+      <div class="sb off"><div class="sn">1-3</div></div>
+      <div class="sb off"><div class="sn">1-4</div></div>
+    </div></div>
+  </div>
+  <div id="detail-card"></div>
+</div>
+
+<!-- ═══ VIEW 2: 种子田 ═══ -->
+<div class="view" id="view-seeds">
+  <div class="card">
+    <div class="section-head">
+      <div class="div"></div>
+      <h2>种子田</h2>
+      <p>每颗种子都带着自己的方向，靠近的种子自然聚拢</p>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot l-gather"></span>聚拢</div>
+      <div class="legend-item"><span class="legend-dot l-sprout"></span>萌发</div>
+      <div class="legend-item"><span class="legend-dot l-grow"></span>生长</div>
+      <div class="legend-item"><span class="legend-dot l-ripe"></span>成熟</div>
+    </div>
+    <div class="bubble-field" id="field">
+      <svg class="connections" id="svg"></svg>
+    </div>
+  </div>
+  <div class="seed-panel" id="seedPanel"></div>
+</div>
+
+<!-- ═══ VIEW 3: 投种子（对话模式） ═══ -->
+<div class="view" id="view-plant">
+  <div class="chat-card">
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg bot">
+        <div class="chat-avatar">🌱</div>
+        <div class="chat-bubble">你好，我是织女。<br>你想在这里做什么？什么想法都可以，不分大小，不必成熟。</div>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <input class="chat-input" id="chatInput" placeholder="说说你的想法…" onkeydown="if(event.key==='Enter')chatSend()">
+      <button class="chat-send" onclick="chatSend()">发送</button>
+    </div>
   </div>
 </div>
 
-<!-- 底部 -->
-<div class="card-footer">
-  <div class="footer-inner">📍 良渚 · S.land</div>
-</div>
-
-</div><!-- end .page-scroll -->
+<div class="footer"><div class="fi">📍 良渚 · S.land</div></div>
 
 <script src="data.js"></script>
 <script>
+/* ── Tab switching ── */
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+  document.querySelector(`.tab-btn[onclick*="${id}"]`).classList.add('active');
+  if(id==='seeds') layoutBubbles();
+}
+
+/* ══ VIEW 1: Space ══ */
 const SPACES = {
-  '4-1-1': { title:'4-1（1）· 小憩', desc:'17.43㎡，3.5m 层高。安静的角落。', people:['刘洋','芜湖'] },
-  '4-1-2': { title:'4-1（2）· 待建设', desc:'16.48㎡。等待被赋予意义。' },
-  '4-2':   { title:'4-2 · 共创空间', desc:'85.5+16.48㎡。女性活动的启动孵化器。地板刚铺好，一切就绪。' },
-  '4-3':   { title:'4-3 · 西米的精神空间', desc:'59.64㎡。', people:['西米'] },
-  '4-4':   { title:'4-4 · 科技空间', desc:'59.64㎡，3.5m 层高。手工与数字的交汇处。', people:['德宏'] },
+  '4-1-1':{ title:'4-1（1）· 小憩', desc:'17.43㎡，3.5m 层高。安静的角落。', people:['刘洋','芜湖'] },
+  '4-1-2':{ title:'4-1（2）· 待建设', desc:'16.48㎡。等待被赋予意义。' },
+  '4-2':{ title:'4-2 · 共创空间', desc:'85.5+16.48㎡。女性活动的启动孵化器。' },
+  '4-3':{ title:'4-3 · 西米的精神空间', desc:'59.64㎡。', people:['西米'] },
+  '4-4':{ title:'4-4 · 科技空间', desc:'59.64㎡，3.5m 层高。手工与数字的交汇处。', people:['德宏'] },
 };
-const SLOT_CLASS = { '上午':'slot-am', '下午':'slot-pm', '晚上':'slot-ev' };
+const SLOT_CLASS = {'上午':'slot-am','下午':'slot-pm','晚上':'slot-ev'};
 const WEEKDAYS = ['日','一','二','三','四','五','六'];
-let currentSpace = null, calYear = CAL_YEAR, calMonth = CAL_MONTH;
+let currentSpace=null, calYear=CAL_YEAR, calMonth=CAL_MONTH;
 
 function go(id) {
-  document.getElementById('detail-card').innerHTML = '';
+  document.getElementById('detail-card').innerHTML='';
   document.querySelectorAll('.sb').forEach(b=>b.classList.remove('active'));
-  const block = document.querySelector(`[data-s="${id}"]`);
-  if(block) block.classList.add('active');
-  currentSpace=id; calYear=CAL_YEAR; calMonth=CAL_MONTH;
-  renderPanel(id);
+  const bl=document.querySelector(`[data-s="${id}"]`);if(bl)bl.classList.add('active');
+  currentSpace=id;calYear=CAL_YEAR;calMonth=CAL_MONTH;renderPanel(id);
 }
-function back() {
-  document.getElementById('detail-card').innerHTML = '';
-  document.querySelectorAll('.sb').forEach(b=>b.classList.remove('active'));
-  currentSpace=null;
-  document.querySelector('.card').scrollIntoView({behavior:'smooth'});
-}
-function renderPanel(id) {
-  const s=SPACES[id]; if(!s) return;
-  const container = document.getElementById('detail-card');
-  const div=document.createElement('div'); div.className='detail-card';
-  const inner=document.createElement('div'); inner.className='dp';
-  let html=`<button class="back" onclick="back()">← 返回</button>`;
-  html+=`<div class="dt">${s.title}</div><div class="dd">${s.desc}</div>`;
-  if(s.people&&s.people.length) html+=`<div class="ds"><h3>这里的人</h3><div class="pl">${s.people.map(p=>`<span class="ps">${p}</span>`).join('')}</div></div>`;
-  html+=`<div class="ds"><h3>排期</h3><div id="cal-container">${buildCalendar(id,calYear,calMonth)}</div></div>`;
+function back(){document.getElementById('detail-card').innerHTML='';document.querySelectorAll('.sb').forEach(b=>b.classList.remove('active'));currentSpace=null;}
+function renderPanel(id){
+  const s=SPACES[id];if(!s)return;
+  const c=document.getElementById('detail-card');
+  const d=document.createElement('div');d.className='detail-card';
+  const inner=document.createElement('div');inner.className='dp';
+  let h=`<button class="back" onclick="back()">← 返回</button>`;
+  h+=`<div class="dt">${s.title}</div><div class="dd">${s.desc}</div>`;
+  if(s.people&&s.people.length) h+=`<div class="ds"><h3>这里的人</h3><div class="pl">${s.people.map(p=>`<span class="ps">${p}</span>`).join('')}</div></div>`;
+  h+=`<div class="ds"><h3>排期</h3><div id="cal-container">${buildCal(id,calYear,calMonth)}</div></div>`;
   const pending=SCHEDULE.filter(a=>a.space===id&&!a.date);
-  if(pending.length){html+=`<div class="ds"><h3>待排期</h3>`;pending.forEach(ev=>{html+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0.7rem 1rem;margin-bottom:0.4rem;"><div style="font-size:0.88rem;">${ev.name}</div><div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.15rem;">${ev.slot||''}${ev.host?' · '+ev.host:''}${ev.status?' · '+ev.status:''}</div></div>`;});html+=`</div>`;}
-  inner.innerHTML=html;
-  div.appendChild(inner);
-  container.innerHTML='';
-  container.appendChild(div);
-  div.scrollIntoView({behavior:'smooth',block:'start'});
+  if(pending.length){h+=`<div class="ds"><h3>待排期</h3>`;pending.forEach(ev=>{h+=`<div style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:0.7rem 1rem;margin-bottom:0.4rem"><div style="font-size:0.88rem">${ev.name}</div><div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.15rem">${ev.slot||''}${ev.host?' · '+ev.host:''}${ev.status?' · '+ev.status:''}</div></div>`;});h+=`</div>`;}
+  inner.innerHTML=h;d.appendChild(inner);c.innerHTML='';c.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'start'});
 }
-function buildCalendar(spaceId,year,month){
-  const first=new Date(year,month-1,1),startDay=first.getDay(),dim=new Date(year,month,0).getDate(),today=new Date();
-  const events={};
-  SCHEDULE.forEach(ev=>{if(ev.space!==spaceId||!ev.date)return;const[y,m,d]=ev.date.split('-').map(Number);if(y===year&&m===month){if(!events[d])events[d]=[];events[d].push(ev);}});
+function buildCal(sid,yr,mo){
+  const first=new Date(yr,mo-1,1),sd=first.getDay(),dim=new Date(yr,mo,0).getDate(),today=new Date();
+  const ev={};SCHEDULE.forEach(a=>{if(a.space!==sid||!a.date)return;const[y,m,d]=a.date.split('-').map(Number);if(y===yr&&m===mo){if(!ev[d])ev[d]=[];ev[d].push(a);}});
   const mn=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
-  let h=`<div class="cal-header"><button onclick="navCal(-1)">‹</button><span class="month-label">${year}年${mn[month-1]}</span><button onclick="navCal(1)">›</button></div>`;
+  let h=`<div class="cal-header"><button onclick="navCal(-1)">‹</button><span class="month-label">${yr}年${mn[mo-1]}</span><button onclick="navCal(1)">›</button></div>`;
   h+=`<table class="cal"><tr>`;WEEKDAYS.forEach(d=>{h+=`<th>${d}</th>`;});h+=`</tr>`;
-  let dc=1;
-  for(let r=0;r<6;r++){if(dc>dim)break;h+=`<tr>`;for(let c=0;c<7;c++){if(r===0&&c<startDay){h+=`<td class="other"></td>`;}else if(dc>dim){h+=`<td class="other"></td>`;}else{const it=(year===today.getFullYear()&&month===today.getMonth()+1&&dc===today.getDate());h+=`<td${it?' class="today"':''}>`;h+=`<div class="day-num">${dc}</div>`;const de=events[dc]||[];if(de.length){h+=`<div class="slots">`;de.forEach(ev=>{h+=`<div class="slot-item ${SLOT_CLASS[ev.slot]||'slot-pm'}" title="${ev.name}·${ev.slot}">${ev.name}</div>`;});h+=`</div>`;}h+=`</td>`;dc++;}}h+=`</tr>`;}
+  let dc=1;for(let r=0;r<6;r++){if(dc>dim)break;h+=`<tr>`;for(let c=0;c<7;c++){if(r===0&&c<sd){h+=`<td class="other"></td>`;}else if(dc>dim){h+=`<td class="other"></td>`;}else{const it=(yr===today.getFullYear()&&mo===today.getMonth()+1&&dc===today.getDate());h+=`<td${it?' class="today"':''}>`;h+=`<div class="day-num">${dc}</div>`;const de=ev[dc]||[];if(de.length){h+=`<div class="slots">`;de.forEach(a=>{h+=`<div class="slot-item ${SLOT_CLASS[a.slot]||'slot-pm'}" title="${a.name}·${a.slot}">${a.name}</div>`;});h+=`</div>`;}h+=`</td>`;dc++;}}h+=`</tr>`;}
   h+=`</table>`;return h;
 }
-function navCal(d){calMonth+=d;if(calMonth>12){calMonth=1;calYear++;}if(calMonth<1){calMonth=12;calYear--;}if(currentSpace)document.getElementById('cal-container').innerHTML=buildCalendar(currentSpace,calYear,calMonth);}
-function seed(){if(!document.getElementById('seedIdea').value.trim())return;document.getElementById('seedForm').style.display='none';document.getElementById('seedOk').style.display='block';}
+function navCal(d){calMonth+=d;if(calMonth>12){calMonth=1;calYear++;}if(calMonth<1){calMonth=12;calYear--;}if(currentSpace)document.getElementById('cal-container').innerHTML=buildCal(currentSpace,calYear,calMonth);}
+
+/* ══ VIEW 2: Seeds ══ */
+const SEED_DATA = [
+  { id:'handcraft',name:'手作',stage:'grow',size:'l',
+    seeds:[{idea:'想在4-3做一个手工皮具工作坊',who:'阿朵',time:'3周前'},{idea:'想学做银饰',who:'匿名',time:'3周前'},{idea:'陶艺体验，周末下午',who:'小鱼',time:'4周前'},{idea:'木工，自己做一把椅子',who:'大成',time:'1个月前'},{idea:'扎染围巾',who:'莲子',time:'1个月前'}],
+    host:{name:'阿朵',emoji:'🧶'},progress:'正在和三楼银饰工作室谈合作，计划先办一场体验日。' },
+  { id:'bodywork',name:'身体',stage:'sprout',size:'l',
+    seeds:[{idea:'女子防身术，系统课',who:'Luna',time:'2周前'},{idea:'瑜伽，清晨那种',who:'匿名',time:'3周前'},{idea:'想找个地方自由地跳舞',who:'阿花',time:'3周前'},{idea:'太极，傍晚在露台',who:'张叔',time:'1个月前'}] },
+  { id:'reading',name:'阅读',stage:'sprout',size:'m',
+    seeds:[{idea:'读书分享会，每周一次',who:'鹿鸣',time:'1周前'},{idea:'非虚构阅读小组',who:'匿名',time:'2周前'},{idea:'诗歌朗读，晚上在露台',who:'匿名',time:'3周前'}] },
+  { id:'nature',name:'自然',stage:'gather',size:'m',
+    seeds:[{idea:'想在楼顶种菜',who:'村长',time:'2周前'},{idea:'做一个堆肥花园',who:'匿名',time:'3周前'}] },
+  { id:'healing',name:'疗愈',stage:'sprout',size:'m',
+    seeds:[{idea:'冥想小组，每周定时',who:'匿名',time:'2周前'},{idea:'声音疗愈体验',who:'小满',time:'3周前'},{idea:'纯粹安静的空间，什么都不做',who:'匿名',time:'1个月前'}] },
+  { id:'food',name:'食物',stage:'ripe',size:'l',
+    seeds:[{idea:'做饭局！每人带一道菜',who:'阿花',time:'2个月前'},{idea:'想学做面包',who:'小何妈妈',time:'2个月前'},{idea:'野餐，春天在草坪',who:'匿名',time:'2个月前'},{idea:'咖啡品鉴，自带豆子',who:'德宏',time:'2个月前'}],
+    host:{name:'阿花',emoji:'🍳'},event:{name:'每人一道菜·春日饭局',date:'4月20日（周日）11:30',place:'4-2 共创空间',slots:'已报名 8/12 人'} },
+  { id:'gathering',name:'松散聚集',stage:'gather',size:'s',
+    seeds:[{idea:'有没有一个地方可以带孩子待一下午',who:'小何妈妈',time:'2周前'}] },
+  { id:'tech',name:'数字造物',stage:'gather',size:'s',
+    seeds:[{idea:'Arduino 工作坊',who:'德宏',time:'3周前'}] },
+];
+const SEED_LINKS = [['handcraft','bodywork'],['bodywork','healing'],['healing','nature'],['reading','gathering'],['handcraft','tech'],['nature','food']];
+const SL = {gather:'聚拢中',sprout:'萌发中',grow:'生长中',ripe:'已成熟'};
+const SC = {gather:'#4a7a42',sprout:'#4a7a42',grow:'#4a7a42',ripe:'#8a3a2a'};
+
+function layoutBubbles(){
+  const f=document.getElementById('field');if(!f)return;
+  const W=f.offsetWidth,H=f.offsetHeight,sR={s:32,m:46,l:60};
+  const sorted=[...SEED_DATA].sort((a,b)=>b.seeds.length-a.seeds.length);
+  const placed=[];const golden=Math.PI*(3-Math.sqrt(5));
+  sorted.forEach((d,i)=>{const r=sR[d.size];let sp=50+i*38,ang=i*golden,x,y,t=0;
+    do{x=W/2+sp*Math.cos(ang)+(Math.random()-0.5)*25;y=H/2+sp*Math.sin(ang)+(Math.random()-0.5)*20;x=Math.max(r+6,Math.min(W-r-6,x));y=Math.max(r+6,Math.min(H-r-6,y));t++;sp+=10;}while(placed.some(p=>Math.hypot(p.x-x,p.y-y)<p.r+r+14)&&t<50);
+    placed.push({id:d.id,x,y,r});d._x=x;d._y=y;});
+  f.querySelectorAll('.bubble').forEach(b=>b.remove());
+  SEED_DATA.forEach(d=>{const el=document.createElement('div');el.className=`bubble stage-${d.stage} size-${d.size}`;const r=sR[d.size];el.style.left=(d._x-r)+'px';el.style.top=(d._y-r)+'px';
+    let inner=`<span class="label">${d.name}</span>`;
+    if(d.stage==='grow'&&d.host)inner+=`<span class="host-tag">${d.host.emoji} ${d.host.name}</span>`;
+    if(d.stage==='ripe')inner+=`<span class="ripe-tag">已成熟</span>`;
+    el.innerHTML=inner;el.onclick=()=>showSeed(d);f.appendChild(el);});
+  const svg=document.getElementById('svg');svg.innerHTML='';
+  SEED_LINKS.forEach(([a,b])=>{const da=SEED_DATA.find(d=>d.id===a),db=SEED_DATA.find(d=>d.id===b);if(!da||!db)return;const l=document.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',da._x);l.setAttribute('y1',da._y);l.setAttribute('x2',db._x);l.setAttribute('y2',db._y);svg.appendChild(l);});
+}
+
+function showSeed(d){
+  const p=document.getElementById('seedPanel');
+  let h=`<div class="sp-header"><span class="sp-title" style="color:${SC[d.stage]}">${d.name}</span><button class="sp-close" onclick="closeSeed()">×</button></div>`;
+  h+=`<span class="sp-badge ${d.stage}">${SL[d.stage]} · ${d.seeds.length} 颗种子</span>`;
+  if(d.stage==='gather') h+=`<div class="sp-desc">种子正在安静聚拢。当更多相似的想法汇聚到这个方向，它会自然萌发。</div>`;
+  if(d.stage==='sprout') h+=`<div class="sp-desc">这个方向已经聚集了足够多的能量，正在萌发中。</div>`;
+  if(d.stage==='grow'){h+=`<div class="sp-host"><div class="sp-host-avatar">${d.host.emoji}</div><div class="sp-host-info"><div class="name">${d.host.name}</div><div class="role">主理人</div></div></div><div class="sp-progress">${d.progress}</div>`;}
+  if(d.stage==='ripe'){h+=`<div class="sp-host"><div class="sp-host-avatar">${d.host.emoji}</div><div class="sp-host-info"><div class="name">${d.host.name}</div><div class="role">主理人</div></div></div>`;h+=`<div class="sp-event"><h4>活动</h4><div class="info"><strong>${d.event.name}</strong><br>📅 ${d.event.date}<br>📍 ${d.event.place}<br>${d.event.slots}</div></div>`;}
+  h+=`<div class="sp-seeds"><h4>种子</h4>`;d.seeds.forEach(s=>{h+=`<div class="seed-item"><div class="idea">${s.idea}</div><div class="meta">${s.who} · ${s.time}</div></div>`;});h+=`</div>`;
+  p.innerHTML=h;p.classList.add('open');p.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function closeSeed(){const p=document.getElementById('seedPanel');p.classList.remove('open');p.innerHTML='';}
+
+/* ══ VIEW 3: Chat ══ */
+let chatStep=0;
+const chatFlow = [
+  { bot:'好的，收到 ✨ 方便告诉我你是谁吗？一个名字就好，匿名也完全没问题。', field:'who' },
+  { bot:'谢谢！如果你愿意留个联系方式（微信或手机），方便后续有动静的时候找到你。不留也没关系。', field:'contact' },
+  { bot:'种子已收到 🌱 它会落在种子田里，和其他种子一起，等待共振。', field:null },
+];
+const seedInput = {};
+
+function chatSend(){
+  const input=document.getElementById('chatInput');
+  const val=input.value.trim();if(!val)return;
+  input.value='';
+  addMsg('user',val);
+
+  if(chatStep===0){
+    seedInput.idea=val; chatStep=1;
+    setTimeout(()=>addMsg('bot',chatFlow[0].bot),600);
+  } else if(chatStep===1){
+    seedInput.who=val; chatStep=2;
+    setTimeout(()=>addMsg('bot',chatFlow[1].bot),600);
+  } else if(chatStep===2){
+    seedInput.contact=val; chatStep=3;
+    setTimeout(()=>{addMsg('bot',chatFlow[2].bot);
+      document.getElementById('chatInput').disabled=true;
+      document.querySelector('.chat-send').disabled=true;
+    },600);
+  }
+}
+
+function addMsg(role,text){
+  const msgs=document.getElementById('chatMessages');
+  const d=document.createElement('div');d.className=`chat-msg ${role}`;
+  if(role==='bot') d.innerHTML=`<div class="chat-avatar">🌱</div><div class="chat-bubble">${text}</div>`;
+  else d.innerHTML=`<div class="chat-bubble">${text}</div>`;
+  msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
+}
+
+/* ── Init ── */
+window.addEventListener('load',()=>{layoutBubbles();});
+window.addEventListener('resize',()=>{if(document.getElementById('view-seeds').classList.contains('active'))layoutBubbles();});
 </script>
 </body>
 </html>
