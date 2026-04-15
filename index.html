@@ -261,8 +261,8 @@
   .footer .fi { color:rgba(255,255,255,0.6); font-size:0.68rem; letter-spacing:0.05em; }
 
   /* ── Poster slot ── */
-  .poster-card { padding:0 !important; overflow:hidden; }
-  .poster-slot { position:relative; width:100%; aspect-ratio:5/1; }
+  .poster-card { padding:0 !important; overflow:hidden; position:relative; }
+  .poster-slot { position:relative; width:100%; }
   .poster-slot img { width:100%; height:100%; object-fit:cover; display:block; border-radius:14px; }
   .poster-placeholder {
     width:100%; height:100%;
@@ -272,6 +272,31 @@
   }
   .poster-icon { font-size:2rem; margin-bottom:0.3rem; opacity:0.4; }
   .poster-text { font-size:0.78rem; color:var(--text-muted); letter-spacing:0.1em; }
+
+  /* ── Two-column space layout ── */
+  .space-layout {
+    display:grid; grid-template-columns:280px 1fr; gap:1rem;
+    max-width:780px; margin:1rem auto;
+  }
+  .poster-col { display:flex; flex-direction:column; }
+  .space-col { display:flex; flex-direction:column; }
+  .space-col .card { flex:1; margin:0; }
+  .poster-col .card { margin:0; }
+
+  /* ── Carousel ── */
+  .poster-track { position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; border-radius:14px 14px 0 0; }
+  .poster-slide {
+    position:absolute; inset:0; opacity:0;
+    transition:opacity 0.5s ease;
+  }
+  .poster-slide.active { opacity:1; }
+  .poster-dots { text-align:center; padding:0.6rem 0; }
+  .dot {
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:var(--border); margin:0 4px; cursor:pointer;
+    transition:background 0.3s;
+  }
+  .dot.active { background:var(--accent); }
 
   /* ── Poster banner (HTML) ── */
   .poster-banner {
@@ -292,26 +317,52 @@
   }
   .pb-content {
     position:relative; z-index:1; text-align:center;
-    padding:0.8rem 1.5rem;
+    padding:1.5rem 1rem;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    height:100%;
   }
   .pb-tag {
-    font-size:0.62rem; color:#8a5a3a; letter-spacing:0.1em;
+    font-size:0.58rem; color:#8a5a3a; letter-spacing:0.1em;
     background:rgba(255,255,255,0.5); display:inline-block;
-    padding:0.15rem 0.6rem; border-radius:10px; margin-bottom:0.4rem;
+    padding:0.15rem 0.6rem; border-radius:10px; margin-bottom:0.6rem;
   }
   .pb-title {
-    font-family:'Noto Serif SC',serif; font-size:1.3rem; font-weight:600;
-    color:#5a3a20; letter-spacing:0.08em; margin-bottom:0.35rem;
+    font-family:'Noto Serif SC',serif; font-size:1.2rem; font-weight:600;
+    color:#5a3a20; letter-spacing:0.08em; margin-bottom:0.5rem; line-height:1.5;
   }
   .pb-info {
-    display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;
-    font-size:0.76rem; color:#7a5a3a; margin-bottom:0.25rem;
+    display:flex; flex-direction:column; gap:0.2rem; align-items:center;
+    font-size:0.72rem; color:#7a5a3a; margin-bottom:0.4rem;
   }
   .pb-slots {
-    font-size:0.68rem; color:#8a6a4a;
+    font-size:0.65rem; color:#8a6a4a;
     background:rgba(255,255,255,0.45); display:inline-block;
     padding:0.12rem 0.6rem; border-radius:8px;
   }
+  .pb-bg2 {
+    background:linear-gradient(135deg, #d8e8d5 0%, #c4d8c0 30%, #a8c8a0 60%, #96b890 100%) !important;
+  }
+  .pb-bg2::before {
+    background:
+      radial-gradient(circle at 20% 50%, rgba(80,140,80,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 80% 40%, rgba(60,120,60,0.1) 0%, transparent 45%) !important;
+  }
+  .pb-bg2 ~ .pb-content .pb-tag { color:#3a6a3a; }
+  .pb-bg2 ~ .pb-content .pb-title { color:#2a4a20; }
+  .pb-bg2 ~ .pb-content .pb-info { color:#3a6a3a; }
+  .pb-bg2 ~ .pb-content .pb-slots { color:#4a6a3a; }
+  .pb-bg3 {
+    background:linear-gradient(135deg, #e8dce8 0%, #d8c8d8 30%, #c8b4c8 60%, #b8a0b8 100%) !important;
+  }
+  .pb-bg3::before {
+    background:
+      radial-gradient(circle at 25% 55%, rgba(120,80,120,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 75% 35%, rgba(100,60,100,0.1) 0%, transparent 45%) !important;
+  }
+  .pb-bg3 ~ .pb-content .pb-tag { color:#6a3a6a; }
+  .pb-bg3 ~ .pb-content .pb-title { color:#4a2a4a; }
+  .pb-bg3 ~ .pb-content .pb-info { color:#6a3a6a; }
+  .pb-bg3 ~ .pb-content .pb-slots { color:#6a4a6a; }
 
   /* ── Plant seed (in seeds view) ── */
   .plant-card { text-align:center; }
@@ -338,6 +389,9 @@
     .tab-btn { font-size:0.72rem; padding:0.5rem 1rem; }
     .card,.detail-card,.seed-panel,.chat-card { margin-left:6px; margin-right:6px; }
     .card { padding:1rem 0.5rem; }
+    .space-layout { grid-template-columns:1fr; max-width:100%; margin-left:6px; margin-right:6px; }
+    .poster-track { aspect-ratio:16/9; }
+    .poster-col .card { margin-bottom:0; }
     .floor-4f,.floor-std,.floor-2f { gap:1px; }
     .floor-4f { grid-template-columns:11% 30% 10% 24% 24%; grid-template-rows:40px 40px; max-width:100%; }
     .floor-std { grid-template-columns:11% 30% 10% 24% 24%; grid-template-rows:46px; max-width:100%; }
@@ -370,30 +424,71 @@
 
 <!-- ═══ VIEW 1: 空间 ═══ -->
 <div class="view active" id="view-space">
-  <!-- 海报位 -->
-  <div class="card poster-card">
-    <div class="poster-slot" id="posterSlot">
-      <div class="poster-banner">
-        <div class="pb-bg"></div>
-        <div class="pb-content">
-          <div class="pb-tag">🍎 种子已成熟</div>
-          <div class="pb-title">每人一道菜 · 春日饭局</div>
-          <div class="pb-info">
-            <span>📅 4月20日（周日）11:30</span>
-            <span>📍 4-2 共创空间</span>
+  <div class="space-layout">
+    <!-- 左：轮播海报 -->
+    <div class="poster-col">
+      <div class="card poster-card">
+        <div class="poster-track" id="posterTrack">
+          <!-- slide 1 -->
+          <div class="poster-slide active">
+            <div class="poster-banner">
+              <div class="pb-bg"></div>
+              <div class="pb-content">
+                <div class="pb-tag">🍎 种子已成熟</div>
+                <div class="pb-title">每人一道菜<br>春日饭局</div>
+                <div class="pb-info">
+                  <span>📅 4/20 周日 11:30</span>
+                  <span>📍 4-2 共创空间</span>
+                </div>
+                <div class="pb-slots">已报名 8/12 人</div>
+              </div>
+            </div>
           </div>
-          <div class="pb-slots">已报名 8/12 人</div>
+          <!-- slide 2 -->
+          <div class="poster-slide">
+            <div class="poster-banner">
+              <div class="pb-bg pb-bg2"></div>
+              <div class="pb-content">
+                <div class="pb-tag">🌱 萌发中</div>
+                <div class="pb-title">身体工作坊</div>
+                <div class="pb-info">
+                  <span>防身术 · 瑜伽 · 自由舞</span>
+                </div>
+                <div class="pb-slots">4 颗种子聚拢</div>
+              </div>
+            </div>
+          </div>
+          <!-- slide 3 -->
+          <div class="poster-slide">
+            <div class="poster-banner">
+              <div class="pb-bg pb-bg3"></div>
+              <div class="pb-content">
+                <div class="pb-tag">🧶 生长中</div>
+                <div class="pb-title">手作体验日</div>
+                <div class="pb-info">
+                  <span>皮具 · 银饰 · 陶艺</span>
+                </div>
+                <div class="pb-slots">主理人：阿朵</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="poster-dots" id="posterDots">
+          <span class="dot active" onclick="goSlide(0)"></span>
+          <span class="dot" onclick="goSlide(1)"></span>
+          <span class="dot" onclick="goSlide(2)"></span>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="section-head">
-      <div class="div"></div>
-      <h2>正在发生</h2>
-      <p>点击亮着的空间，看看里面正在发生什么</p>
-    </div>
+    <!-- 右：正在发生 -->
+    <div class="space-col">
+      <div class="card">
+        <div class="section-head">
+          <div class="div"></div>
+          <h2>正在发生</h2>
+          <p>点击亮着的空间，看看里面正在发生什么</p>
+        </div>
 
     <div class="floor"><div class="floor-4f">
       <div class="sb p1a" data-s="4-1-1" onclick="go('4-1-1')"><div class="sn">4-1（1）</div><div class="sr">小憩</div><div class="st">桌游</div></div>
@@ -427,6 +522,8 @@
     </div></div>
   </div>
   <div id="detail-card"></div>
+    </div><!-- /space-col -->
+  </div><!-- /space-layout -->
 </div>
 
 <!-- ═══ VIEW 2: 种子田 ═══ -->
@@ -632,6 +729,19 @@ function addMsg(role,text){
 }
 
 /* ── Init ── */
+/* ── Poster carousel ── */
+let curSlide = 0;
+const slides = document.querySelectorAll('.poster-slide');
+const dots = document.querySelectorAll('.dot');
+function goSlide(n) {
+  slides[curSlide].classList.remove('active');
+  dots[curSlide].classList.remove('active');
+  curSlide = n % slides.length;
+  slides[curSlide].classList.add('active');
+  dots[curSlide].classList.add('active');
+}
+setInterval(() => goSlide(curSlide + 1), 5000);
+
 window.addEventListener('load',()=>{layoutBubbles();});
 window.addEventListener('resize',()=>{if(document.getElementById('view-seeds').classList.contains('active'))layoutBubbles();});
 </script>
