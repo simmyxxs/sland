@@ -260,6 +260,37 @@
   .footer { max-width:780px; margin:1rem auto 0; text-align:center; }
   .footer .fi { color:rgba(255,255,255,0.6); font-size:0.68rem; letter-spacing:0.05em; }
 
+  /* ── Poster slot ── */
+  .poster-card { padding:0 !important; overflow:hidden; }
+  .poster-slot { position:relative; width:100%; aspect-ratio:16/7; }
+  .poster-slot img { width:100%; height:100%; object-fit:cover; display:block; border-radius:14px; }
+  .poster-placeholder {
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:2px dashed var(--border); border-radius:14px;
+    background:rgba(255,255,255,0.5);
+  }
+  .poster-icon { font-size:2rem; margin-bottom:0.3rem; opacity:0.4; }
+  .poster-text { font-size:0.78rem; color:var(--text-muted); letter-spacing:0.1em; }
+
+  /* ── Plant seed (in seeds view) ── */
+  .plant-card { text-align:center; }
+  .plant-btn {
+    display:inline-block; border:none;
+    background:var(--accent); color:#fff;
+    font-family:'Noto Sans SC',sans-serif; font-size:0.92rem; font-weight:400;
+    padding:0.7rem 2rem; border-radius:24px;
+    cursor:pointer; letter-spacing:0.06em;
+    transition:background 0.2s, transform 0.2s;
+  }
+  .plant-btn:hover { background:#5a8a4b; transform:translateY(-1px); }
+  .plant-chat {
+    display:none; margin-top:1rem; text-align:left;
+    max-width:500px; margin-left:auto; margin-right:auto;
+    min-height:280px;
+  }
+  .plant-chat.open { display:block; animation:viewIn 0.3s ease; }
+
   /* ── Mobile ── */
   @media(max-width:700px) {
     .header { padding:2rem 1rem 0.8rem; }
@@ -295,11 +326,20 @@
 <div class="tab-nav">
   <button class="tab-btn active" onclick="switchView('space')">空间</button>
   <button class="tab-btn" onclick="switchView('seeds')">种子田</button>
-  <button class="tab-btn" onclick="switchView('plant')">投一颗种子</button>
 </div>
 
 <!-- ═══ VIEW 1: 空间 ═══ -->
 <div class="view active" id="view-space">
+  <!-- 海报位 -->
+  <div class="card poster-card">
+    <div class="poster-slot" id="posterSlot">
+      <div class="poster-placeholder">
+        <span class="poster-icon">🖼</span>
+        <span class="poster-text">海报位</span>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="section-head">
       <div class="div"></div>
@@ -360,20 +400,23 @@
     </div>
   </div>
   <div class="seed-panel" id="seedPanel"></div>
-</div>
 
-<!-- ═══ VIEW 3: 投种子（对话模式） ═══ -->
-<div class="view" id="view-plant">
-  <div class="chat-card">
-    <div class="chat-messages" id="chatMessages">
-      <div class="chat-msg bot">
-        <div class="chat-avatar">🌱</div>
-        <div class="chat-bubble">你好，我是织女。<br>你想在这里做什么？什么想法都可以，不分大小，不必成熟。</div>
+  <!-- 投种子入口 -->
+  <div class="card plant-card">
+    <button class="plant-btn" id="plantBtn" onclick="togglePlant()">
+      🌱 投一颗种子
+    </button>
+    <div class="plant-chat" id="plantChat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg bot">
+          <div class="chat-avatar">🌱</div>
+          <div class="chat-bubble">你好，我是织女。<br>你想在这里做什么？什么想法都可以，不分大小，不必成熟。</div>
+        </div>
       </div>
-    </div>
-    <div class="chat-input-area">
-      <input class="chat-input" id="chatInput" placeholder="说说你的想法…" onkeydown="if(event.key==='Enter')chatSend()">
-      <button class="chat-send" onclick="chatSend()">发送</button>
+      <div class="chat-input-area">
+        <input class="chat-input" id="chatInput" placeholder="说说你的想法…" onkeydown="if(event.key==='Enter')chatSend()">
+        <button class="chat-send" onclick="chatSend()">发送</button>
+      </div>
     </div>
   </div>
 </div>
@@ -490,7 +533,19 @@ function showSeed(d){
 }
 function closeSeed(){const p=document.getElementById('seedPanel');p.classList.remove('open');p.innerHTML='';}
 
-/* ══ VIEW 3: Chat ══ */
+/* ══ VIEW 3: Chat (inside seeds view) ══ */
+function togglePlant() {
+  const chat = document.getElementById('plantChat');
+  const btn = document.getElementById('plantBtn');
+  if (chat.classList.contains('open')) {
+    chat.classList.remove('open');
+    btn.style.display = '';
+  } else {
+    chat.classList.add('open');
+    btn.style.display = 'none';
+    document.getElementById('chatInput').focus();
+  }
+}
 let chatStep=0;
 const chatFlow = [
   { bot:'好的，收到 ✨ 方便告诉我你是谁吗？一个名字就好，匿名也完全没问题。', field:'who' },
