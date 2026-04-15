@@ -54,12 +54,9 @@
     margin-bottom:1.5rem; font-size:0.68rem; color:var(--text-muted);
   }
   .legend-item { display:flex; align-items:center; gap:0.35rem; }
-  .legend-dot {
-    width:10px; height:10px; border-radius:50%;
-  }
+  .legend-dot { width:10px; height:10px; border-radius:50%; }
   .legend-dot.l-gather { background:rgba(106,154,91,0.2); border:1px solid rgba(106,154,91,0.3); }
   .legend-dot.l-sprout { background:rgba(106,154,91,0.35); border:1px solid var(--accent); animation:lpulse 2s infinite; }
-  .legend-dot.l-discuss { background:rgba(180,140,60,0.25); border:1px solid rgba(180,140,60,0.5); }
   .legend-dot.l-grow { background:rgba(106,154,91,0.5); border:1px solid var(--accent); }
   .legend-dot.l-ripe { background:rgba(212,175,55,0.4); border:1px solid rgba(180,140,60,0.6); }
   @keyframes lpulse { 0%,100%{box-shadow:none} 50%{box-shadow:0 0 4px rgba(106,154,91,0.5)} }
@@ -79,12 +76,7 @@
     transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s;
   }
   .bubble:hover { transform:scale(1.1); z-index:10; }
-  .bubble .label {
-    font-family:'Noto Serif SC',serif; line-height:1.2; pointer-events:none;
-  }
-  .bubble .sub-label {
-    font-size:0.5rem; color:var(--text-muted); pointer-events:none; margin-top:2px;
-  }
+  .bubble .label { font-family:'Noto Serif SC',serif; line-height:1.2; pointer-events:none; }
 
   /* ── Stage: 聚拢 ── */
   .bubble.stage-gather {
@@ -104,32 +96,6 @@
   @keyframes sproutPulse {
     0%,100% { box-shadow:0 0 0 0 rgba(106,154,91,0.1); }
     50% { box-shadow:0 0 20px 5px rgba(106,154,91,0.18); }
-  }
-
-  /* ── Stage: 讨论会 ── */
-  .bubble.stage-discuss {
-    background:rgba(245,238,220,0.85); border:1.5px solid rgba(180,140,60,0.4);
-    animation:discussGlow 4s ease-in-out infinite;
-  }
-  .bubble.stage-discuss .label { font-size:0.8rem; color:#8a7040; font-weight:400; }
-  .bubble.stage-discuss::after {
-    content:'🤝'; position:absolute; top:-8px; right:-4px; font-size:0.75rem;
-  }
-  /* 小人点聚集效果 */
-  .bubble.stage-discuss .people-dots {
-    display:flex; gap:2px; margin-top:3px; pointer-events:none;
-  }
-  .bubble.stage-discuss .pdot {
-    width:4px; height:4px; border-radius:50%; background:rgba(180,140,60,0.5);
-    animation:dotFade 2s ease-in-out infinite;
-  }
-  .bubble.stage-discuss .pdot:nth-child(2) { animation-delay:0.3s; }
-  .bubble.stage-discuss .pdot:nth-child(3) { animation-delay:0.6s; }
-  .bubble.stage-discuss .pdot:nth-child(4) { animation-delay:0.9s; }
-  @keyframes dotFade { 0%,100%{opacity:0.3} 50%{opacity:1} }
-  @keyframes discussGlow {
-    0%,100% { box-shadow:0 0 0 0 rgba(180,140,60,0.05); }
-    50% { box-shadow:0 0 16px 4px rgba(180,140,60,0.12); }
   }
 
   /* ── Stage: 生长 ── */
@@ -157,7 +123,7 @@
     padding:1px 6px; border-radius:8px; margin-top:3px; pointer-events:none;
   }
 
-  /* ── Size tiers (seed count) ── */
+  /* ── Size tiers ── */
   .bubble.size-s { width:64px; height:64px; }
   .bubble.size-m { width:92px; height:92px; }
   .bubble.size-l { width:120px; height:120px; }
@@ -182,7 +148,6 @@
   }
   .dp-stage-badge.gather { background:#f0f4ed; color:var(--text-muted); }
   .dp-stage-badge.sprout { background:var(--accent-soft); color:var(--accent); }
-  .dp-stage-badge.discuss { background:#f5eedd; color:#8a7040; }
   .dp-stage-badge.grow { background:var(--accent-soft); color:#4a7a42; }
   .dp-stage-badge.ripe { background:#f5eedd; color:#7a6520; }
 
@@ -196,11 +161,6 @@
   }
   .seed-item .idea { font-size:0.84rem; color:var(--text); line-height:1.5; }
   .seed-item .meta { font-size:0.65rem; color:var(--text-muted); margin-top:0.2rem; }
-
-  /* discuss-specific */
-  .dp-meeting { background:#faf7ef; border-radius:10px; padding:1rem; margin-bottom:1rem; }
-  .dp-meeting h4 { font-size:0.72rem; color:#8a7040; letter-spacing:0.08em; margin-bottom:0.5rem; font-weight:400; }
-  .dp-meeting .info { font-size:0.82rem; color:var(--text); line-height:1.8; }
 
   /* grow-specific */
   .dp-host { display:flex; align-items:center; gap:0.8rem; background:#f4f8f2; border-radius:10px; padding:1rem; margin-bottom:1rem; }
@@ -237,7 +197,6 @@
     .bubble.size-m { width:76px; height:76px; }
     .bubble.size-l { width:100px; height:100px; }
     .bubble .label { font-size:0.6rem !important; }
-    .bubble .sub-label { font-size:0.42rem; }
     .legend { gap:0.8rem; font-size:0.58rem; }
   }
 </style>
@@ -260,7 +219,6 @@
   <div class="legend">
     <div class="legend-item"><span class="legend-dot l-gather"></span>聚拢</div>
     <div class="legend-item"><span class="legend-dot l-sprout"></span>萌发</div>
-    <div class="legend-item"><span class="legend-dot l-discuss"></span>讨论会</div>
     <div class="legend-item"><span class="legend-dot l-grow"></span>生长</div>
     <div class="legend-item"><span class="legend-dot l-ripe"></span>成熟</div>
   </div>
@@ -291,14 +249,13 @@ const DATA = [
     progress:'正在和三楼银饰工作室谈合作，计划先办一场体验日，包含皮具+银饰+陶艺三个工位。',
   },
   {
-    id:'bodywork', name:'身体', stage:'discuss', size:'l',
+    id:'bodywork', name:'身体', stage:'sprout', size:'l',
     seeds:[
       { idea:'女子防身术，最好是系统课', who:'Luna', time:'2周前' },
       { idea:'瑜伽，清晨那种', who:'匿名', time:'3周前' },
       { idea:'想找个地方跳舞，不是课，就是自由地跳', who:'阿花', time:'3周前' },
       { idea:'太极，傍晚在露台', who:'张叔', time:'1个月前' },
     ],
-    meeting:{ date:'4月19日（周六）下午', place:'4-2 共创空间', people:6 },
   },
   {
     id:'reading', name:'阅读', stage:'sprout', size:'m',
@@ -307,7 +264,6 @@ const DATA = [
       { idea:'想组一个非虚构阅读小组', who:'匿名', time:'2周前' },
       { idea:'诗歌朗读，晚上在露台', who:'匿名', time:'3周前' },
     ],
-    sproutNote:'织女正在联系种子主人，协调讨论会时间',
   },
   {
     id:'nature', name:'自然', stage:'gather', size:'m',
@@ -323,7 +279,6 @@ const DATA = [
       { idea:'声音疗愈体验', who:'小满', time:'3周前' },
       { idea:'想要一个纯粹安静的空间，什么都不做', who:'匿名', time:'1个月前' },
     ],
-    sproutNote:'织女正在联系种子主人，协调讨论会时间',
   },
   {
     id:'food', name:'食物', stage:'ripe', size:'l',
@@ -356,14 +311,8 @@ const LINKS = [
   ['handcraft','tech'], ['nature','food'],
 ];
 
-const STAGE_LABEL = {
-  gather:'聚拢中', sprout:'萌发中', discuss:'讨论会筹备中',
-  grow:'生长中', ripe:'已成熟'
-};
-const STAGE_COLOR = {
-  gather:'#4a7a42', sprout:'#4a7a42', discuss:'#8a7040',
-  grow:'#4a7a42', ripe:'#7a6520'
-};
+const STAGE_LABEL = { gather:'聚拢中', sprout:'萌发中', grow:'生长中', ripe:'已成熟' };
+const STAGE_COLOR = { gather:'#4a7a42', sprout:'#4a7a42', grow:'#4a7a42', ripe:'#7a6520' };
 
 function layout() {
   const field = document.getElementById('field');
@@ -387,7 +336,6 @@ function layout() {
     d._x=x; d._y=y;
   });
 
-  // Render
   field.querySelectorAll('.bubble').forEach(b=>b.remove());
   DATA.forEach(d => {
     const el = document.createElement('div');
@@ -397,12 +345,6 @@ function layout() {
     el.style.top = (d._y-r)+'px';
 
     let inner = `<span class="label">${d.name}</span>`;
-
-    if(d.stage==='discuss') {
-      inner += `<div class="people-dots">`;
-      for(let i=0;i<(d.meeting?.people||4);i++) inner += `<span class="pdot"></span>`;
-      inner += `</div>`;
-    }
     if(d.stage==='grow' && d.host) {
       inner += `<span class="host-tag">${d.host.emoji} ${d.host.name}</span>`;
     }
@@ -415,7 +357,6 @@ function layout() {
     field.appendChild(el);
   });
 
-  // Lines
   const svg = document.getElementById('svg');
   svg.innerHTML = '';
   LINKS.forEach(([a,b]) => {
@@ -436,23 +377,11 @@ function showDetail(d) {
   </div>`;
   h += `<span class="dp-stage-badge ${d.stage}">${STAGE_LABEL[d.stage]} · ${d.seeds.length} 颗种子</span>`;
 
-  // Stage-specific content
   if(d.stage==='gather') {
     h += `<div class="dp-desc">种子正在安静聚拢。当更多相似的想法汇聚到这个方向，它会自然萌发。</div>`;
   }
   if(d.stage==='sprout') {
-    h += `<div class="dp-desc">${d.sproutNote||'这个方向已经聚集了足够多的能量。'}</div>`;
-  }
-  if(d.stage==='discuss') {
-    h += `<div class="dp-meeting">
-      <h4>讨论会</h4>
-      <div class="info">
-        📅 ${d.meeting.date}<br>
-        📍 ${d.meeting.place}<br>
-        👥 已确认 ${d.meeting.people} 人参加
-      </div>
-    </div>`;
-    h += `<div class="dp-desc">种子主人们即将坐到一起，看看这些想法能长出什么。主理人会从讨论中自然涌现。</div>`;
+    h += `<div class="dp-desc">这个方向已经聚集了足够多的能量，正在萌发中。</div>`;
   }
   if(d.stage==='grow') {
     h += `<div class="dp-host">
@@ -484,7 +413,6 @@ function showDetail(d) {
     h += `<a class="dp-cal-link" href="#">查看排期 →</a>`;
   }
 
-  // Seeds (all stages)
   h += `<div class="dp-seeds"><h4>种子</h4>`;
   d.seeds.forEach(s => {
     h += `<div class="seed-item">
