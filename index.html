@@ -273,6 +273,46 @@
   .poster-icon { font-size:2rem; margin-bottom:0.3rem; opacity:0.4; }
   .poster-text { font-size:0.78rem; color:var(--text-muted); letter-spacing:0.1em; }
 
+  /* ── Poster banner (HTML) ── */
+  .poster-banner {
+    position:relative; width:100%; height:100%;
+    border-radius:14px; overflow:hidden;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .pb-bg {
+    position:absolute; inset:0;
+    background:linear-gradient(135deg, #f5e6d8 0%, #e8d5c4 30%, #d4c4a8 60%, #c8b896 100%);
+  }
+  .pb-bg::before {
+    content:''; position:absolute; inset:0;
+    background:
+      radial-gradient(circle at 15% 60%, rgba(180,120,80,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 85% 30%, rgba(160,100,60,0.12) 0%, transparent 45%),
+      radial-gradient(circle at 50% 80%, rgba(200,160,100,0.1) 0%, transparent 40%);
+  }
+  .pb-content {
+    position:relative; z-index:1; text-align:center;
+    padding:0.8rem 1.5rem;
+  }
+  .pb-tag {
+    font-size:0.62rem; color:#8a5a3a; letter-spacing:0.1em;
+    background:rgba(255,255,255,0.5); display:inline-block;
+    padding:0.15rem 0.6rem; border-radius:10px; margin-bottom:0.4rem;
+  }
+  .pb-title {
+    font-family:'Noto Serif SC',serif; font-size:1.3rem; font-weight:600;
+    color:#5a3a20; letter-spacing:0.08em; margin-bottom:0.35rem;
+  }
+  .pb-info {
+    display:flex; gap:1.2rem; justify-content:center; flex-wrap:wrap;
+    font-size:0.76rem; color:#7a5a3a; margin-bottom:0.25rem;
+  }
+  .pb-slots {
+    font-size:0.68rem; color:#8a6a4a;
+    background:rgba(255,255,255,0.45); display:inline-block;
+    padding:0.12rem 0.6rem; border-radius:8px;
+  }
+
   /* ── Plant seed (in seeds view) ── */
   .plant-card { text-align:center; }
   .plant-btn {
@@ -333,7 +373,18 @@
   <!-- 海报位 -->
   <div class="card poster-card">
     <div class="poster-slot" id="posterSlot">
-      <img src="bg.jpg" alt="S.land">
+      <div class="poster-banner">
+        <div class="pb-bg"></div>
+        <div class="pb-content">
+          <div class="pb-tag">🍎 种子已成熟</div>
+          <div class="pb-title">每人一道菜 · 春日饭局</div>
+          <div class="pb-info">
+            <span>📅 4月20日（周日）11:30</span>
+            <span>📍 4-2 共创空间</span>
+          </div>
+          <div class="pb-slots">已报名 8/12 人</div>
+        </div>
+      </div>
     </div>
   </div>
 
