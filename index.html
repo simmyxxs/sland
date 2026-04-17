@@ -246,6 +246,16 @@ body{
   .bubble .label{font-size:0.6rem!important;}
   .legend{gap:0.8rem;font-size:0.58rem;}
 }
+
+/* ── Tabs ── */
+.tab-nav{display:flex;justify-content:center;gap:0;max-width:780px;margin:0 auto 1.2rem;position:relative;z-index:2;}
+.tab-btn{font-family:'Noto Sans SC',sans-serif;font-size:0.82rem;font-weight:300;letter-spacing:0.08em;padding:0.6rem 1.8rem;border:none;background:rgba(255,255,255,0.5);color:rgba(255,255,255,0.85);cursor:pointer;transition:all 0.3s;}
+.tab-btn:first-child{border-radius:10px 0 0 10px;}
+.tab-btn:last-child{border-radius:0 10px 10px 0;}
+.tab-btn.active{background:rgba(255,255,255,0.94);color:var(--text);font-weight:400;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.tab-btn:hover:not(.active){background:rgba(255,255,255,0.7);}
+.tab-view{display:none;}
+.tab-view.active{display:block;}
 </style>
 </head>
 <body>
@@ -255,7 +265,12 @@ body{
   <div class="sub">一个正在生长的空间 · 良渚</div>
 </div>
 
-<div class="main-layout">
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('space')">空间</button>
+  <button class="tab-btn" onclick="switchTab('seeds')">种子田</button>
+</div>
+
+<div class="tab-view active" id="tab-space"><div class="main-layout">
   <!-- 左：轮播海报 -->
   <div class="poster-col">
     <div class="poster-card">
@@ -343,8 +358,9 @@ body{
     </div>
   </div>
 </div>
+</div><!-- /tab-space -->
 
-<!-- 种子田 -->
+<div class="tab-view" id="tab-seeds"><!-- 种子田 -->
 <div class="seeds-wrap">
   <div class="seeds-card">
     <div class="seeds-head">
@@ -383,6 +399,7 @@ body{
   </div>
 </div>
 
+</div><!-- /tab-seeds -->
 <div class="footer"><div class="fi">📍 良渚 · S.land</div></div>
 
 <script src="data.js"></script>
@@ -514,6 +531,14 @@ function addMsg(role,text){
 
 window.addEventListener('load',()=>layoutBubbles());
 window.addEventListener('resize',()=>layoutBubbles());
+
+function switchTab(id){
+  document.querySelectorAll('.tab-view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  document.querySelector(`.tab-btn[onclick*="${id}"]`).classList.add('active');
+  if(id==='seeds') layoutBubbles();
+}
 </script>
 </body>
 </html>
