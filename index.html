@@ -256,6 +256,21 @@ body{
 .tab-btn:hover:not(.active){background:rgba(255,255,255,0.7);}
 .tab-view{display:none;}
 .tab-view.active{display:block;}
+
+/* ── Poster wall ── */
+.poster-wall-wrap{max-width:1100px;margin:1.2rem auto 0;padding:0 1.5rem;}
+.poster-wall{display:flex;gap:1rem;overflow-x:auto;padding-bottom:0.5rem;}
+.poster-wall::-webkit-scrollbar{height:4px;}
+.poster-wall::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.3);border-radius:2px;}
+.pw-card{
+  position:relative;flex:0 0 200px;height:280px;
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+  transition:transform 0.3s,box-shadow 0.3s;cursor:default;
+}
+.pw-card:hover{transform:translateY(-4px) rotate(0.5deg);box-shadow:0 8px 32px rgba(0,0,0,0.2);}
+.pw-card .pb-bg{position:absolute;inset:0;}
+.pw-card .pb-content{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.2rem 0.8rem;text-align:center;}
 </style>
 </head>
 <body>
@@ -270,54 +285,8 @@ body{
   <button class="tab-btn" onclick="switchTab('seeds')">种子田</button>
 </div>
 
-<div class="tab-view active" id="tab-space"><div class="main-layout">
-  <!-- 左：轮播海报 -->
-  <div class="poster-col">
-    <div class="poster-card">
-      <div class="poster-track" id="posterTrack">
-        <div class="poster-slide active">
-          <div class="poster-banner pb-warm">
-            <div class="pb-bg"></div>
-            <div class="pb-content">
-              <div class="pb-tag">🍎 种子已成熟</div>
-              <div class="pb-title">每人一道菜<br>春日饭局</div>
-              <div class="pb-info"><span>📅 4/20 周日 11:30</span><span>📍 4-2 共创空间</span></div>
-              <div class="pb-slots">已报名 8/12 人</div>
-            </div>
-          </div>
-        </div>
-        <div class="poster-slide">
-          <div class="poster-banner pb-green">
-            <div class="pb-bg"></div>
-            <div class="pb-content">
-              <div class="pb-tag">🌱 萌发中</div>
-              <div class="pb-title">身体工作坊</div>
-              <div class="pb-info"><span>防身术 · 瑜伽 · 自由舞</span></div>
-              <div class="pb-slots">4 颗种子聚拢</div>
-            </div>
-          </div>
-        </div>
-        <div class="poster-slide">
-          <div class="poster-banner pb-purple">
-            <div class="pb-bg"></div>
-            <div class="pb-content">
-              <div class="pb-tag">🧶 生长中</div>
-              <div class="pb-title">手作体验日</div>
-              <div class="pb-info"><span>皮具 · 银饰 · 陶艺</span></div>
-              <div class="pb-slots">主理人：阿朵</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="poster-dots" id="posterDots">
-        <span class="dot active" onclick="goSlide(0)"></span>
-        <span class="dot" onclick="goSlide(1)"></span>
-        <span class="dot" onclick="goSlide(2)"></span>
-      </div>
-    </div>
-  </div>
-
-  <!-- 右：楼层图 -->
+<div class="tab-view active" id="tab-space"><div class="main-layout" style="grid-template-columns:1fr;">
+  <!-- 楼层图 -->
   <div class="space-col">
     <div class="space-card">
       <div class="space-head">
@@ -497,16 +466,6 @@ function showSeed(d){
 }
 function closeSeed(){const p=document.getElementById('seedPanel');p.classList.remove('open');p.innerHTML='';}
 
-/* Carousel */
-let curSlide=0;
-const slides=()=>document.querySelectorAll('.poster-slide');
-const dots=()=>document.querySelectorAll('.dot');
-function goSlide(n){
-  slides()[curSlide].classList.remove('active');dots()[curSlide].classList.remove('active');
-  curSlide=n%slides().length;
-  slides()[curSlide].classList.add('active');dots()[curSlide].classList.add('active');
-}
-setInterval(()=>goSlide(curSlide+1),5000);
 
 /* Plant chat */
 let chatStep=0;
