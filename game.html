@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外界交互打卡游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0B0E14;
+            color: #F8FAFC;
+            padding: 24px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            margin-bottom: 32px;
+        }
+
+        .title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #F8FAFC;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #94A3B8;
+            margin-bottom: 24px;
+        }
+
+        /* Stats Bar */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #38BDF8, #22D3EE);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: #F8FAFC;
+        }
+
+        .stat-secondary {
+            font-size: 14px;
+            color: #64748B;
+            margin-top: 4px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 32px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .progress-label {
+            font-size: 14px;
+            color: #94A3B8;
+        }
+
+        .progress-score {
+            font-size: 18px;
+            font-weight: 600;
+            color: #F97316;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: #0F172A;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #F97316, #FB923C);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-milestones {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            padding: 0 2px;
+        }
+
+        .milestone {
+            font-size: 11px;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .milestone-icon {
+            font-size: 16px;
+        }
+
+        /* Category Grid */
+        .categories {
+            display: grid;
+            gap: 24px;
+        }
+
+        .category {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .category-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .category-icon {
+            width: 32px;
+            height: 32px;
+            background: #0F172A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .category-progress {
+            font-size: 13px;
+            color: #64748B;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Tasks */
+        .tasks {
+            display: grid;
+            gap: 8px;
+        }
+
+        .task {
+            background: #0F172A;
+            border: 1px solid #1E293B;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .task:hover {
+            background: #1E293B;
+            border-color: #38BDF8;
+            transform: translateX(2px);
+        }
+
+        .task.completed {
+            opacity: 0.5;
+        }
+
+        .task.completed .task-checkbox {
+            background: #22D3EE;
+            border-color: #22D3EE;
+        }
+
+        .task.completed .task-checkbox::after {
+            content: '✓';
+            color: #0B0E14;
+            font-weight: 600;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #334155;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .task-content {
+            flex: 1;
+            font-size: 14px;
+            color: #F8FAFC;
+        }
+
+        .task-points {
+            font-size: 13px;
+            font-weight: 600;
+            color: #F97316;
+            background: rgba(249, 115, 22, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Timeline Badge */
+        .timeline {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            color: #94A3B8;
+        }
+
+        .timeline-days {
+            font-size: 24px;
+            font-weight: 700;
+            color: #38BDF8;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 16px;
+            }
+
+            .title {
+                font-size: 24px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .timeline {
+                bottom: 16px;
+                right: 16px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">外界交互打卡游戏 🎮</h1>
+            <p class="subtitle">一个月内尽可能多地打卡，不思考重要性，只管做</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">当前积分</div>
+                <div class="stat-value">0</div>
+                <div class="stat-secondary">/ 120 总分</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">已完成任务</div>
+                <div class="stat-value">0</div>
+                <div class="stat-secondary">/ 38 任务</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">螺蛳粉进度</div>
+                <div class="stat-value">0</div>
+                <div class="stat-secondary">/ 12 可兑换</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">完成率</div>
+                <div class="stat-value">0%</div>
+                <div class="stat-secondary">持续中</div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-header">
+                <span class="progress-label">螺蛳粉兑换进度</span>
+                <span class="progress-score">0 / 10 分</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-milestones">
+                <div class="milestone"><span class="milestone-icon">🍜</span>10</div>
+                <div class="milestone"><span class="milestone-icon">🍜</span>20</div>
+                <div class="milestone"><span class="milestone-icon">🍜</span>30</div>
+                <div class="milestone"><span class="milestone-icon">🍜</span>40</div>
+                <div class="milestone"><span class="milestone-icon">🍜</span>50</div>
+            </div>
+        </div>
+
+        <div class="categories">
+            <!-- 输出类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">📤</div>
+                        输出类
+                    </div>
+                    <div class="category-progress">0 / 9 完成 · 0 / 61 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">公众号发第一篇文章</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">把之前写的东西发到 Medium 或 Substack</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">写一篇分析/评论发出去</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">做一个小网站/落地页放出去</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">GitHub 发一个项目/代码片段</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">录一条语音/视频发出去</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">小红书发一条内容</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">即刻发一条内容</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">微博发一条内容</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 对话类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">💬</div>
+                        对话类
+                    </div>
+                    <div class="category-progress">0 / 5 完成 · 0 / 11 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">主动联系一个很久没联系的人</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">给喜欢的创作者/公司写一封信/留言</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">约一个陌生人 coffee chat</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">在一个社群里主动说话/发起话题</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">参加一个线下 meetup/活动</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 参与类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">🤝</div>
+                        参与类
+                    </div>
+                    <div class="category-progress">0 / 5 完成 · 0 / 13 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">给一家公司投简历</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">参与协作项目（设计/写作/翻译）</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">报名一个比赛/挑战/计划</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">申请加入一个组织/社群</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">给开源项目提 PR/issue</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 交易类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">💰</div>
+                        交易类
+                    </div>
+                    <div class="category-progress">0 / 3 完成 · 0 / 23 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">接一个外包/咨询项目</div>
+                        <div class="task-points">3 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">提供一个付费服务（咨询/设计/陪聊）</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">发起一个众筹</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 探索类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">🗺️</div>
+                        探索类
+                    </div>
+                    <div class="category-progress">0 / 4 完成 · 0 / 4 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">去一个从没去过的地方（城市/店/场馆）</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">尝试一个从没做过的事（攀岩/陶艺/即兴喜剧）</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">上一门线下课/工作坊</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">参加一个展览/演出/读书会</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 影响类 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-title">
+                        <div class="category-icon">✨</div>
+                        影响类
+                    </div>
+                    <div class="category-progress">0 / 3 完成 · 0 / 12 分</div>
+                </div>
+                <div class="tasks">
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">组织一个小活动（线上/线下）</div>
+                        <div class="task-points">10 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">给一个产品/服务写详细反馈</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                    <div class="task">
+                        <div class="task-checkbox"></div>
+                        <div class="task-content">帮助一个陌生人（豆瓣/知乎/Reddit）</div>
+                        <div class="task-points">1 分</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="timeline">
+        <div class="timeline-label">剩余天数</div>
+        <div class="timeline-days">30</div>
+    </div>
+
+    <script>
+        // 交互逻辑示例（点击任务打卡）
+        document.querySelectorAll('.task').forEach(task => {
+            task.addEventListener('click', function() {
+                this.classList.toggle('completed');
+                updateStats();
+            });
+        });
+
+        function updateStats() {
+            // 统计逻辑（简化版）
+            const allTasks = document.querySelectorAll('.task');
+            const completedTasks = document.querySelectorAll('.task.completed');
+            const completedCount = completedTasks.length;
+            
+            // 计算积分
+            let totalScore = 0;
+            completedTasks.forEach(task => {
+                const pointsText = task.querySelector('.task-points').textContent;
+                const points = parseInt(pointsText.match(/\d+/)[0]);
+                totalScore += points;
+            });
+
+            // 更新顶部统计
+            document.querySelectorAll('.stat-value')[0].textContent = totalScore;
+            document.querySelectorAll('.stat-value')[1].textContent = completedCount;
+            document.querySelectorAll('.stat-value')[2].textContent = Math.floor(totalScore / 10);
+            document.querySelectorAll('.stat-value')[3].textContent = Math.round((completedCount / allTasks.length) * 100) + '%';
+
+            // 更新进度条
+            const currentProgress = totalScore % 10;
+            document.querySelector('.progress-score').textContent = `${currentProgress} / 10 分`;
+            document.querySelector('.progress-fill').style.width = (currentProgress / 10 * 100) + '%';
+
+            // 更新每个分类的进度
+            document.querySelectorAll('.category').forEach(category => {
+                const tasks = category.querySelectorAll('.task');
+                const completed = category.querySelectorAll('.task.completed');
+                let categoryScore = 0;
+                let maxScore = 0;
+                
+                tasks.forEach(task => {
+                    const points = parseInt(task.querySelector('.task-points').textContent.match(/\d+/)[0]);
+                    maxScore += points;
+                    if (task.classList.contains('completed')) {
+                        categoryScore += points;
+                    }
+                });
+                
+                category.querySelector('.category-progress').textContent = 
+                    `${completed.length} / ${tasks.length} 完成 · ${categoryScore} / ${maxScore} 分`;
+            });
+        }
+
+        // 计算剩余天数
+        function updateDaysRemaining() {
+            const endDate = new Date('2026-09-11');
+            const today = new Date();
+            const diffTime = endDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.querySelector('.timeline-days').textContent = diffDays > 0 ? diffDays : 0;
+        }
+
+        updateDaysRemaining();
+    </script>
+</body>
+</html>
